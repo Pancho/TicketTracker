@@ -1,0 +1,21 @@
+{% load form_tags %}<form action="#" method="post" class="tt-form tt-auth-block">
+					<fieldset>
+						<legend>Login</legend>
+						<ol>{% for field in form %}{% if not field.is_hidden %}
+							<li id="{{ field.name }}"{{ field|print_classes }}>
+								{{ field.label_tag }}
+								{{ field|one_line }}{% if field.help_text %}
+								<span class="tt-form-help">{{ field.help_text }}</span>{% endif %}{% if field.errors|length %}
+								{{ field.errors }}{% endif %}
+							</li>{% endif %}{% endfor %}
+						</ol>{% if form.non_field_errors|length %}
+						{{ form.non_field_errors }}{% endif %}
+						<div>{% for field in form %}{% if field.is_hidden %}
+							{{ field }}{% endif %}{% endfor %}
+							{% csrf_token %}{% if next %}
+							<input type="hidden" name="next" id="next" value="{{ next }}" />{% endif %}{% if reason %}
+							<input type="hidden" name="reason" id="reason" value="{{ reason }}" />{% endif %}
+							<input id="login" name="login" type="submit" value="Submit" />
+						</div>
+					</fieldset>
+				</form>

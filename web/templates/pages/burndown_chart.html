@@ -1,0 +1,6 @@
+{% extends 'skeleton.html' %}{% block title %}Burndown Chart for Sprint {{ current_sprint.sprint_number }}, Named: {{ current_sprint.name }}{% endblock title %}
+{% block main %}<div id="tt-bdchart">
+				<h2 class="tt-bdchart">Burndown Chart {% if not current_sprint %}- No Active Sprint{% else %}for Sprint {{ current_sprint.sprint_number }}, Named: {{ current_sprint.name }}{% endif %}<noscript> - You will need JavaScript to view the chart!</noscript></h2>
+				{% include 'blocks/burndown_chart.html' %}
+			</div>{% endblock main %}{% block extra_script_before %}
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script>{% endblock extra_script_before %}

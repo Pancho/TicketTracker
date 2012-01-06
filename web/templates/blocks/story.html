@@ -1,0 +1,18 @@
+{% load form_tags %}<form action="{{ form.action }}" method="post" id="tt-story" class="tt-form">
+					<fieldset>
+						<ol>{% for field in form %}{% if not field.is_hidden %}
+							<li id="{{ field.name }}"{{ field|print_classes }}>
+								{{ field.label_tag }}
+								{{ field|one_line }}{% if field.help_text %}
+								<span class="tt-form-help">{{ field.help_text }}</span>{% endif %}{% if field.errors|length %}
+								{{ field.errors }}{% endif %}
+							</li>{% endif %}{% endfor %}
+						</ol>{% if form.non_field_errors|length %}
+						{{ form.non_field_errors }}{% endif %}
+						<div>{% for field in form %}{% if field.is_hidden %}
+							{{ field }}{% endif %}{% endfor %}
+							{% csrf_token %}
+							<input id="submit" name="submit" type="submit" value="Submit" />
+						</div>
+					</fieldset>
+				</form>

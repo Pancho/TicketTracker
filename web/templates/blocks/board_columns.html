@@ -1,0 +1,19 @@
+{% load story_tags %}{% load user_tags %}<ul id="tt-board-columns">{% for column in board_columns %}
+					<li>
+						<h4 class="tt-board">{{ column.title }}</h4>
+						<ul id="tt-backlog-list-{{ column.tag }}" class="tt-side-list">{% for story in column.get_stories %}
+							<li class="tt-story-{{ story.moscow }}{% if story.is_green %} tt-story-green{% endif %}{% cycle ' tt-odd' ' tt-even' %}">
+								<h6><a id="tt-story-id-{{ story.id }}" {% if story.is_burning %} class="tt-fire"{% endif %} href="{% url web.backlog_story_edit story.id %}">{% if story.is_green %}G/{% endif %}{{ story.title }}</a></h6>
+								<p>{{ story.story_description }}</p>
+								<ol class="tt-board-story-tasks">{% for task in story.task_set.all %}
+									<li>{{ task.description }} ({{ task.score }}) - {{ task.owner.first_name }} {{ task.owner.last_name|name_initial }}.</li>{% endfor %}
+								</ol>
+								<span class="tt-story-score">{% if story.time_boxed %}[{{ story|calculate_score }}]{% else %}{{ story|calculate_score }}{% endif %}</span>
+								<ol class="tt-board-story-actions">{% if story.state != 'DONE' and story.state != 'FIRE' %}
+									<li><a href="{% url web.board_story_next story.id %}">Move to Next Column</a></li>{% endif %}{% if story.state != first_column_tag %}
+									<li><a href="{% url web.board_story_previous story.id %}">Move to Previous Column</a></li>{% endif %}
+								</ol>
+							</li>{% endfor %}
+						</ul>
+					</li>{% endfor %}
+				</ul>

@@ -1,0 +1,29 @@
+{% load user_tags %}{% load board_column_tags %}{% load story_action_tags %}<ul id="tt-sprint-columns">
+					<li class="tt-board-actions">
+						<h4 class="tt-planning">Board Actions</h4>
+						<ul id="tt-sprint-board-actions" class="tt-side-list tt-non-collapsible">{% for board_action in day_data.board_actions %}
+							<li class="{% cycle 'tt-odd' 'tt-even' %}">
+								<h6><a>{{ board_action.story.title }}</a></h6>
+								<p>{{ board_action.actor.first_name }} {{ board_action.actor.first_name|name_initial }}. moved story "{% if board_action.story.is_burning %}<span class="tt-fire">{{ board_action.story.title }}</span>{% else %}{{ board_action.story.title }}{% endif %}" from column {{ board_action|pretty_print_column_name_from }} to column {{ board_action|pretty_print_column_name_to }}</p>
+							</li>{% endfor %}
+						</ul>
+					</li>
+					<li class="tt-fires">
+						<h4 class="tt-planning">Fires</h4>
+						<ul id="tt-sprint-fires" class="tt-side-list tt-non-collapsible">{% for fire in day_data.fires %}
+							<li class="{% cycle 'tt-odd' 'tt-even' %}">
+								<h6><a class="tt-fire">{{ fire.title }}</a></h6>
+								<p>{{ fire.created_by.first_name }} {{ fire.created_by.last_name|name_initial }}. created a fire story titled {{ fire.title }}</p>
+							</li>{% endfor %}
+						</ul>
+					</li>
+					<li class="tt-story-actions">
+						<h4 class="tt-planning">Story Actions</h4>
+						<ul id="tt-sprint-story-actions" class="tt-side-list tt-non-collapsible">{% for story_action in day_data.story_actions %}
+							<li class="{% cycle 'tt-odd' 'tt-even' %}">
+								<h6><a>Change on story {{ story_action.task.story.title }} - task {{ story_action.task.description }}</a></h6>
+								<p>{{ story_action.actor.first_name }} {{ story_action.actor.last_name|name_initial }}. changed the state for task "{{ story_action.task.description }}" to {{ story_action|humanize }}</p>
+							</li>{% endfor %}
+						</ul>
+					</li>
+				</ul>

@@ -1,0 +1,29 @@
+{% load story_tags %}<div>
+					<h5 class="tt-backlog">Backlog</h5>
+					<ul id="tt-backlog-available" class="tt-sprint-planning-stories tt-side-list tt-non-collapsible">{% for story in backlog %}
+						<li class="tt-story-{{ story.moscow }}{% if story.is_green %} tt-story-green{% endif %}{% cycle ' tt-odd' ' tt-even' %}">
+							<h6><a class="tt-show">{% if story.is_green %}G/{% endif %}{{ story.title }}</a></h6>
+							<p>{{ story.story_description|truncatewords:10 }}</p>
+							<span class="tt-story-score">{% if story.time_boxed %}[{{ story|calculate_score }}]{% else %}{{ story|calculate_score }}{% endif %}</span>
+							<ol>
+								<li><a href="{% url web.planning_sprint_stories_add sprint.id story.id %}" id="tt-ids-{{ story.id }}-{{ sprint.id }}" class="tt-ids">Add to Sprint</a></li>
+								<li><a href="{% url web.backlog_duplicate_story story.id %}?return-to={% url web.planning_sprint_stories sprint.id %}">Duplicate Story</a></li>
+							</ol>
+						</li>{% endfor %}
+					</ul>
+				</div>
+				<div>
+					<h5 class="tt-sprint">Sprint</h5>
+					<ul id="tt-sprint-set" class="tt-sprint-planning-stories tt-side-list tt-non-collapsible">{% for story in sprint_stories %}
+						<li class="tt-story-{{ story.moscow }}{% if story.is_green %} tt-story-green{% endif %}{% cycle ' tt-odd' ' tt-even' %}">
+							<h6><a href="{% url web.backlog_story_edit story.id %}">{% if story.is_green %}G/{% endif %}{{ story.title }}</a></h6>
+							<p>{{ story.story_description|truncatewords:10 }}</p>
+							<span class="tt-story-score">{% if story.time_boxed %}[{{ story|calculate_score_humanize }}]{% else %}{{ story|calculate_score_humanize }}{% endif %}</span>
+							<ol>
+								<li><a href="{% url web.planning_sprint_stories_remove sprint.id story.id %}" id="tt-ids-{{ story.id }}-{{ sprint.id }}" class="tt-ids">Remove from Sprint</a></li>
+								<li><a href="{% url web.planning_sprint_stories_owner sprint.id story.id %}">Set owner(s)</a></li>
+								<li><a href="{% url web.backlog_duplicate_story story.id %}?return-to={% url web.planning_sprint_stories sprint.id %}">Duplicate Story</a></li>
+							</ol>
+						</li>{% endfor %}
+					</ul>
+				</div>

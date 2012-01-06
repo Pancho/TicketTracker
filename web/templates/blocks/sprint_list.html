@@ -1,0 +1,18 @@
+{% load sprint_tags %}<ul id="tt-sprint-list" class="tt-side-list tt-non-collapsible">
+				<li class="tt-new-sprint"><a href="{% url web.planning_new_sprint %}">Create New Sprint</a></li>{% for sprint in sprints %}
+				<li class="{% cycle 'tt-odd' 'tt-even' %}">
+					<h6><a href="">Sprint {{ sprint.sprint_number }}, Named: {{ sprint.name }}</a></h6>
+					<p>From: {{ sprint.date_begins|date:"m.d.Y" }}</p><p>To: {{ sprint.date_ends|date:"m.d.Y" }}</p>
+					<p>{{ sprint.goals|truncatewords:10 }}</p>
+					<span class="tt-sprint-score">Planned Points: {{ sprint|calculate_sprint_score }}</span>
+					<span class="tt-sprint-score">Available Points: {{ sprint|calculate_available_sprint_score }}</span>
+					<ol>{% if sprint|is_finished %}
+						<li><a href="{% url web.sprint_overview sprint.id %}">See Sprint Overview</a></li>{% endif %}{% if sprint|is_in_progress %}
+						<li><a href="{% url web.board %}">See Sprint Board</a></li>
+						<li><a href="{% url web.burndown_chart %}">See Sprint Burndown Chart</a></li>
+						<li><a href="{% url web.sprint %}">See Sprint Progress</a></li>{% endif %}{% if sprint|is_in_future %}
+						<li><a href="{% url web.planning_sprint_availability sprint.id %}">Plan Availability</a></li>
+						<li><a href="{% url web.planning_sprint_stories sprint.id %}">Add stories</a></li>{% endif %}
+					</ol>
+				</li>{% endfor %}
+			</ul>

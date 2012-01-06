@@ -1,0 +1,10 @@
+{% load story_tags %}{% load user_tags %}<ul class="tt-board-story-tasks">{% for task in selected_story.task_set.all %}
+					<li>
+						<h5>{% if task.state == 'TO_CLOSED' %}<del>{{ task.description }} ({{ task.score }}) - {{ task.owner.first_name }} {{ task.owner.last_name|name_initial }}.</del>{% else %}{{ task.description }} ({{ task.score }}) - {{ task.owner.first_name }} {{ task.owner.last_name|name_initial }}.{% endif %}</h5>
+						<ol>{% if task.state == 'TO_WAITING' %}
+							<li><a href="{% url web.my_stuff_story_task_change_state task.id 'working' %}?return-to={% url web.my_stuff_story_tasks selected_story.id %}">Start Working</a></li>{% endif %}{% if task.state == 'TO_WORKING' %}
+							<li><a href="{% url web.my_stuff_story_task_change_state task.id 'closed' %}?return-to={% url web.my_stuff_story_tasks selected_story.id %}">Mark as Finished</a></li>{% endif %}{% if task.state == 'TO_CLOSED' %}
+							<li><a href="{% url web.my_stuff_story_task_change_state task.id 'waiting' %}?return-to={% url web.my_stuff_story_tasks selected_story.id %}">Reopen</a></li>{% endif %}
+						</ol>
+					</li>{% endfor %}
+				</ul>

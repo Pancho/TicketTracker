@@ -1,0 +1,7 @@
+{% load availability_tags %}<ul id="tt-availability-list" class="tt-side-list tt-non-collapsible">{% for availability in availabilities %}
+					<li class="{% cycle ' tt-odd' ' tt-even' %}">
+						<h6><a href="">{{ availability.user.first_name }} {{ availability.user.last_name }}</a></h6>
+						<p>Planned Points: {{ availability|get_full_score }}</p>
+						<p>Remaining Points: {{ availability|get_remaining_score }}</p>
+					</li>{% endfor %}
+				</ul>

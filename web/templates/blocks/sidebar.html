@@ -1,0 +1,8 @@
+<ul>
+				<li{% if sidebar_selected == 'board' %} class="tt-selected"{% endif %}><a class="tt-board" href="{% url web.board %}">View the board</a></li>
+				<li{% if sidebar_selected == 'mystuff' %} class="tt-selected"{% endif %}><a class="tt-mystuff" href="{% url web.my_stuff %}">My Stuff</a></li>
+				<li{% if sidebar_selected == 'bdchart' %} class="tt-selected"{% endif %}><a class="tt-bdchart" href="{% url web.burndown_chart %}">See the Burndown Chart</a></li>
+				<li{% if sidebar_selected == 'backlog' %} class="tt-selected"{% endif %}><a class="tt-backlog" href="{% url web.backlog %}">Backlog</a></li>
+				<li{% if sidebar_selected == 'sprint' %} class="tt-selected"{% endif %}><a class="tt-sprint" href="{% url web.sprint %}">Sprint</a></li>
+				<li{% if sidebar_selected == 'planning' %} class="tt-selected"{% endif %}><a class="tt-planning" href="{% url web.planning %}">Let's Plan</a></li>
+			</ul>

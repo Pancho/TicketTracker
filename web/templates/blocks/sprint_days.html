@@ -1,0 +1,5 @@
+<ul id="tt-sprint-days-list" class="tt-side-list tt-non-collapsible">{% for day in days %}
+				<li class="{% cycle 'tt-odd' 'tt-even' %}{% if selected_day == day.formatted %} tt-selected{% endif %}">
+					<h6><a href="{% url web.sprint_day day.day day.month day.year %}">{{ day.formatted }} ({{ day.board_actions_count }}/{{ day.fires_count }}/{{ day.story_actions_count }})</a></h6>
+				</li>{% endfor %}
+			</ul>

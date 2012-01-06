@@ -1,0 +1,12 @@
+{% extends 'skeleton.html' %}
+{% block main_classes %} class="tt-index"{% endblock main_classes %}
+{% block head_classes %} class="tt-index"{% endblock head_classes %}
+{% block sidebar %}{% endblock sidebar %}
+{% block main %}<ul id="tt-main-dashboard">
+				<li><a class="tt-board" href="{% url web.board %}">View the board</a></li>
+				<li><a class="tt-mystuff" href="{% url web.my_stuff %}">My Stuff</a></li>
+				<li><a class="tt-bdchart" href="{% url web.burndown_chart %}">See the Burndown Chart</a></li>
+				<li><a class="tt-backlog" href="{% url web.backlog %}">Backlog</a></li>
+				<li><a class="tt-sprint" href="{% url web.sprint %}">Sprint</a></li>
+				<li><a class="tt-planning" href="{% url web.planning %}">Let's Plan</a></li>
+			</ul>{% endblock main %}

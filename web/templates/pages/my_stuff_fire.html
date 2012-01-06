@@ -1,0 +1,6 @@
+{% extends 'skeleton.html' %}{% block title %}TicketTracker - My Stuff - Add Fire Story{% endblock title %}
+{% block main %}{% include 'blocks/my_stories_list.html' %}
+			<div id="tt-mystuff">
+				<h2 class="tt-mystuff"><a href="{% url web.my_stuff %}">My Stuff</a> - {% if not current_sprint %}Cannot Add Fire While No Sprint Is Active{% else %}Add Fire Story{% endif %}</h2>{% if current_sprint %}
+				{% include 'blocks/my_stuff_fire.html' %}{% endif %}
+			</div>{% endblock main %}

@@ -1,0 +1,6 @@
+{% extends 'skeleton.html' %}{% block title %}TicketTracker - Sprint{% endblock title %}
+{% block main %}{% include 'blocks/sprint_days.html' %}
+			<div id="tt-sprint">
+				<h2 class="tt-sprint">Sprint</h2>
+				{% include 'blocks/sprint_day.html' %}
+			</div>{% endblock main %}

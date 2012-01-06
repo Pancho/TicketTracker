@@ -1,0 +1,5 @@
+{% extends 'skeleton.html' %}{% load sprint_tags %}{% block title %}Planning - Sprint: {{ sprint.sprint_number }}, Named:{{ sprint.name }}{% endblock title %}
+{% block main %}<div id="tt-planning">
+				<h2 class="tt-planning"><a href="{% url web.planning %}">Planning</a> - Sprint: {{ sprint.sprint_number }}, Named:{{ sprint.name }} (Points Available: <span>{{ sprint|calculate_available_sprint_score }}</span>)</h2>
+				{% include 'blocks/story_columns.html' %}
+			</div>{% endblock main %}

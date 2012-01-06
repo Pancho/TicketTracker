@@ -1,0 +1,7 @@
+{% extends 'skeleton.html' %}{% block title %}TicketTracker - Login{% endblock title %}
+{% block sidebar %}{% endblock sidebar %}{% block main %}<div id="tt-main-layout">
+			<div id="tt-auth">
+				{% include 'blocks/login.html' %}
+				<p>Did you forget your password? Create new by following <a href="{% url password_reset %}">this link</a>.</p>
+			</div>
+		</div>{% endblock main %}{% block main_classes %} class="tt-login"{% endblock main_classes %}

@@ -1,0 +1,6 @@
+{% extends 'skeleton.html' %}{% block title %}TicketTracker - Overview for Sprint {{ selected_sprint.sprint_number }}, Named: {{ selected_sprint.name }}{% endblock title %}
+{% block main %}{% include 'blocks/sprint_overview_days.html' %}
+			<div id="tt-planning" class="tt-sprint-overview">
+				<h2 class="tt-planning"><a href="{% url web.sprint_overview selected_sprint.id %}">Overview for Sprint {{ selected_sprint.sprint_number }}, Named: {{ selected_sprint.name }}</a></h2>
+				{% include 'blocks/sprint_overview_day.html' %}
+			</div>{% endblock main %}

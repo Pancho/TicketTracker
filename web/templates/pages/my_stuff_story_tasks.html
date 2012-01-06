@@ -1,0 +1,6 @@
+{% extends 'skeleton.html' %}{% block title %}TicketTracker - My Stuff{% endblock title %}
+{% block main %}{% include 'blocks/my_stories_list.html' %}
+			<div id="tt-mystuff">
+				<h2 class="tt-mystuff"><a href="{% url web.my_stuff %}">My Stuff</a> - Story: {{ selected_story.title }} - Tasks</h2>
+				{% include 'blocks/my_stuff_story_tasks.html' %}
+			</div>{% endblock main %}

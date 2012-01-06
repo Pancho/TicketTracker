@@ -1,0 +1,6 @@
+{% extends 'skeleton.html' %}{% block title %}Backlog - Story: {% if story.is_green %}G/{% endif %}{{ story.title }}{% endblock title %}
+{% block main %}{% include 'blocks/backlog_list.html' %}
+			<div id="tt-backlog">
+				<h2 class="tt-backlog">Backlog - Tasks for Story: {% if story.is_green %}G/{% endif %}{{ story.title }}</h2>
+				{% include 'blocks/tasks_list.html' %}
+			</div>{% endblock main %}

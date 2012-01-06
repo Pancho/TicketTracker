@@ -1,0 +1,179 @@
+/* CSS RESET from http://meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/ */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-family:inherit;font-size:100%;vertical-align:baseline;}
+/* remember to define focus styles! */
+:focus {outline:0;}
+body {line-height:1;color:#000;background:#fff;}
+ol, ul {list-style:none;}
+/* tables still need 'cellspacing="0"' in the markup */
+table {border-collapse:separate;border-spacing:0;}
+caption, th, td {text-align:left;font-weight:normal;}
+blockquote:before, blockquote:after,
+q:before, q:after {content:"";}
+blockquote, q {quotes:"" "";}
+strong{font-weight:bold;}
+
+body {font-family:Arial,sans-serif;font-size:62.5%;color:#000;}
+
+#tt-head {margin:0 auto;height:10em;}
+#tt-head h1 {font-family:'Open Sans Condensed',sans-serif;padding:2em 0 1.8em 0.5em;background:#333;}
+#tt-head.tt-index h1 {padding:2em 0 1.8em 5%;margin:0;}
+#tt-head h1 a {font-size:4em;text-decoration:none;color:#fff;}
+#tt-head ul {margin:0;padding:0 2em 0 0;background:#111;height:2.1em;border-bottom:1px solid #555;}
+#tt-head ul li {padding:0 0 0 1em;float:right;color:#fff;margin:.5em 0;}
+#tt-head ul li span {font-size:1.1em;}
+#tt-head ul li span strong {font-weight:bold;}
+#tt-head ul li a {font-size:1.1em;text-decoration:underline;color:#fff;}
+
+#tt-main {margin:0 0 0 15em;}
+#tt-main.tt-index {margin:0;}
+
+#tt-main-dashboard {letter-spacing:-4px;}
+#tt-main-dashboard li {width:40%;display:inline-block;letter-spacing:normal;word-spacing:normal;padding:0 5%;margin:5em 0;}
+#tt-main-dashboard li a {font-size:5em;font-family:'Open Sans Condensed',sans-serif;text-decoration:none;border-bottom:1px dashed;}
+
+/* SECTION COLORS */
+.tt-board {color:#2809FF;}
+.tt-mystuff {color:#0D9FD9;}
+.tt-bdchart {color:#F5380C;}
+.tt-backlog {color:#F27405;}
+.tt-sprint {color:#5f8e00;}
+.tt-planning {color:#7DBA00;}
+
+h2 a {color:inherit;text-decoration:none;border-bottom:1px dotted;}
+
+#tt-sidebar {width:15em;position:absolute;}
+#tt-sidebar ul {padding:1em 0 0 0;}
+#tt-sidebar ul li {margin:0 0 1em 0;padding:1em .5em;}
+#tt-sidebar ul li a {display:block;font-size:2.5em;font-family:'Open Sans Condensed',sans-serif;text-decoration:none;}
+#tt-sidebar ul li.tt-selected a {text-decoration:underline;}
+
+.tt-side-list {background:#F9F9F9;width:25em;position:absolute;padding:0;min-height:22em;}
+.tt-side-list li {margin:0;padding:1em 0 1em 1.5em;}
+.tt-side-list li.tt-odd {background:#F2F2F2;}
+.tt-side-list li h6 {font-size:2em;font-family:'Open Sans Condensed',sans-serif;margin:0 0 .5em 0;text-decoration:underline;}
+.tt-side-list li h6 a {color:inherit;}
+.tt-side-list li p {font-size:1.2em;line-height:1.6666666;margin:0 1.6666666em 0 0;}
+.tt-side-list li span {display:block;padding:0 .3333333em;margin:.666666em 0 0 0;height:1.333333em;font-size:1.5em;float:right;text-align:center;color:#fff;}
+.tt-side-list li ol {margin:4em 0 0 0;clear:both;}
+.tt-side-list li ol li {border:none;padding:0;display:inline-block;margin:0 .5em .5em 0;}
+.tt-side-list li ol li a {font-size:1.2em;color:#000;}
+
+.tt-side-list.tt-sidelist-open p, .tt-side-list.tt-sidelist-open ol, .tt-side-list.tt-sidelist-open span, {display:block;}
+
+/*Specia pges*/
+#tt-404 {text-align:center;}
+#tt-404 h1 {font-size:5em;}
+#tt-404 img {margin:2em 0;}
+
+/*Auth*/
+#tt-auth {width:96em;margin:4em auto;}
+#tt-auth p {font-size:1.5em;padding:1.333333em 0 0 1.333333em;}
+
+/*Planning sprint lists*/
+#tt-sprint-list {letter-spacing:-4px;width:auto;margin:2em 0 0 0;}
+#tt-sprint-list li {vertical-align:top;height:20em;width:30em;display:inline-block;letter-spacing:normal;word-spacing:normal;border-bottom:1px solid #d2d1d1;}
+#tt-sprint-list li.tt-new-sprint {}
+#tt-sprint-list li.tt-new-sprint a {display:block;font-size:3em;color:#5f8e00;font-family:'Open Sans Condensed',sans-serif;}
+#tt-sprint-list.tt-side-list li span {color:#5f8e00;width:auto;margin:0.666666em .333333em 0 0;display:block;clear:both;}
+#tt-sprint-list.tt-side-list li ol {margin:4em 0 0 0;clear:both;}
+#tt-sprint-list.tt-side-list li ol li {width:auto;height:auto;border:none;}
+
+#tt-planning h5 {font-size:2em;font-family:'Open Sans Condensed',sans-serif;}
+#tt-planning div {display:inline-block;vertical-align:top;margin:2em 2em 0 2em;}
+#tt-planning div#tt-burndownchart-lines {display:block;vertical-align:top;margin:0;}
+#tt-planning .tt-side-list {position:relative;margin:2em 0 0 0;}
+#tt-planning #tt-availability-list.tt-side-list {position:absolute;}
+#tt-planning #tt-task-owners {margin:0 0 0 25em;}
+
+#tt-planning form fieldset legend {color:#7DBA00;font-family:'Open Sans Condensed',sans-serif;font-size:3em;padding:.666666em 0 0 .666666em;}
+
+#tt-planning.tt-sprint-overview {margin-left:27em;}
+
+/*Page Title*/
+#tt-main h2 {font-size:4em;margin:0 0 0 .5em;padding:.25em 0 0 0;font-family:'Open Sans Condensed',sans-serif;}
+
+/*Story flags*/
+.tt-side-list li.tt-story-green h6 {color:#5f8e00;}
+.tt-side-list li.tt-story-M {border-left:10px solid #F5380C;}
+.tt-side-list li.tt-story-S {border-left:10px solid #2809FF;}
+.tt-side-list li.tt-story-C {border-left:10px solid #0D9FD9;}
+.tt-side-list li.tt-story-W {border-left:10px solid #5f8e00;}
+
+.tt-side-list li.tt-story-M span {background:#F5380C;}
+.tt-side-list li.tt-story-S span {background:#2809FF;}
+.tt-side-list li.tt-story-C span {background:#0D9FD9;}
+.tt-side-list li.tt-story-W span {background:#5f8e00;}
+
+#tt-backlog {margin:0 0 0 25em;}
+
+/*My Stuff*/
+#tt-mystuff {margin:0 0 0 25em;}
+.tt-fire {text-shadow:0 0 4px #ccc,0 -5px 4px #ff3,2px -10px 6px #fd3,-2px -15px 11px #f80,2px -18px 18px #f20;}
+
+#tt-mystuff .tt-board-story-tasks {margin:2em 0 0 2em;letter-spacing:-4px;}
+#tt-mystuff .tt-board-story-tasks li {vertical-align:top;display:inline-block;letter-spacing:normal;word-spacing:normal;width:30em;margin:0 2em 2em 0;}
+#tt-mystuff .tt-board-story-tasks li h5 {font-size:2em;font-family:'Open Sans Condensed',sans-serif;}
+#tt-mystuff .tt-board-story-tasks li ol {margin:1em 0 0 0;}
+#tt-mystuff .tt-board-story-tasks li ol li {}
+#tt-mystuff .tt-board-story-tasks li ol li a {font-size:1.2em;color:#0D9FD9;}
+
+/*Sprint*/
+#tt-sprint {margin:0 0 0 25em;}
+
+#tt-sprint-columns {margin:2em 0 0 2em;letter-spacing:-4px;}
+#tt-sprint-columns li {vertical-align:top;display:inline-block;letter-spacing:normal;word-spacing:normal;width:30em;margin:0 2em 0 0;}
+#tt-sprint-columns li h4 {font-size:2em;font-family:'Open Sans Condensed',sans-serif;}
+#tt-sprint-columns li p span {color:#000;width:auto;margin:auto;display:inline;clear:none;font-size:1em;height:auto;float:none;}
+#tt-sprint-columns li .tt-side-list {position:relative;margin:2em 0 0 0;width:26.6em;}
+#tt-sprint-columns li .tt-side-list li {width:25em;}
+#tt-sprint-columns li .tt-board-story-tasks {border-top:1px solid #999;padding:1em 0 0 0;}
+#tt-sprint-columns li .tt-board-story-tasks li {width:auto;font-size:1.2em;margin:0 0 .8333333em 0;display:block;}
+#tt-sprint-columns li .tt-board-story-actions {letter-spacing:-4px;}
+#tt-sprint-columns li .tt-board-story-actions li {display:inline-block;letter-spacing:normal;word-spacing:normal;margin:0 0 .41666666em 0;}
+
+#tt-sprint-columns li.tt-board-actions ul {border-left:10px solid #2809FF;}
+#tt-sprint-columns li.tt-fires ul {border-left:10px solid #F5380C;}
+#tt-sprint-columns li.tt-story-actions ul {border-left:10px solid #0D9FD9;}
+
+/*Board*/
+#tt-board-columns {margin:2em 0 0 2em;letter-spacing:-4px;}
+#tt-board-columns li {vertical-align:top;display:inline-block;letter-spacing:normal;word-spacing:normal;width:30em;margin:0 2em 0 0;}
+#tt-board-columns li h4 {font-size:2em;font-family:'Open Sans Condensed',sans-serif;}
+#tt-board-columns li .tt-side-list {position:relative;margin:2em 0 0 0;width:27.6em;}
+#tt-board-columns li .tt-side-list li {width:25em;}
+#tt-board-columns li .tt-board-story-tasks {border-top:1px solid #999;padding:1em 0 0 0;}
+#tt-board-columns li .tt-board-story-tasks li {width:auto;font-size:1.2em;margin:0 0 .8333333em 0;display:block;}
+#tt-board-columns li .tt-board-story-actions {letter-spacing:-4px;}
+#tt-board-columns li .tt-board-story-actions li {display:inline-block;letter-spacing:normal;word-spacing:normal;margin:0 0 .41666666em 0;}
+
+/*Forms*/
+.tt-form {margin:2em 0 0 1em;}
+.tt-form fieldset {}
+.tt-form fieldset legend {font-size:2em;padding:0 0 1em 0.5em;color:#0D9FD9;}
+.tt-form fieldset p {font-size:1.5em;padding:0 0 1em 1.333333em;margin:1.333333em 0 0 0;}
+.tt-form fieldset ol {}
+.tt-form fieldset ol li {padding:1em 0 1em 1em;margin:0 0 1em 0;}
+.tt-form fieldset ol li.focused {background-color:#ffffbe;}
+.tt-form fieldset ol li.error {background-color:#FAD3D3;}
+.tt-form fieldset ol li input {width:15em;}
+.tt-form fieldset ol li label {float:left;font-size:1.5em;width:10em;}
+.tt-form fieldset ol li textarea {width:30em;}
+.tt-form fieldset ol li select {width:15em;}
+.tt-form fieldset ol li span.tt-form-help {display:block;clear:both;font-size:1.5em;margin:.666666em 0 0 0;color:#0D9FD9;}
+.tt-form fieldset ol li.tt-checkbox input {width:auto;}
+.tt-form fieldset div {clear:both;margin:2em 0 0 1em;}
+.tt-form fieldset div input {background:#F27405;border:1px solid #F26415;-webkit-background-clip:padding-box;border-radius:5px;color:#fff;font-size:1.5em;height:2em;-webkit-box-shadow:inset 0 0 3px #fff;}
+/*Formsets*/
+.tt-form .tt-inline-form {margin:0 0 2em 0;border-bottom:1px solid #ddd;}
+.tt-form .tt-inline-form ol {}
+.tt-form .tt-inline-form ol li {}
+.tt-form .tt-inline-form ol li label {}
+.tt-form .tt-inline-form ol li input {}
+.tt-form .tt-inline-form ol li input[type=checkbox] {width:auto;}
+.tt-form .tt-inline-form ol li select.tt-inline-select {}
+
+/*Sprint Forms*/
+#tt-planning .tt-form div input {background:#689a00;border:1px solid #90d600;}
+
+.tt-form fieldset ul.errorlist {}
+.tt-form fieldset ul.errorlist li {font-size:1.5em;color:#F5380C;margin:0 0 .666666em 0;padding:0;}

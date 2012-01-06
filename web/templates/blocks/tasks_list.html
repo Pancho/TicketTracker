@@ -1,0 +1,24 @@
+{% load form_tags %}<form action="{{ task_formset.action }}" method="post" id="tt-tasks" class="tt-form">
+						<fieldset>
+							{{ task_formset.management_form }}
+							<ol>{% for form in task_formset.forms %}
+								<li class="tt-inline-form">{% if form.non_field_errors|length %}
+									{{ form.non_field_errors }}{% endif %}
+									<ol>{% for field in form %}{% if not field.is_hidden %}
+										<li>
+											{{ field.label_tag }}
+											{{ field|one_line }}{% if field.help_text %}
+											<span class="tt-form-help">{{ field.help_text }}</span>{% endif %}{% if field.errors|length %}
+											{{ field.errors }}{% endif %}
+										</li>{% endif %}{% endfor %}
+									</ol>
+								</li>{% endfor %}
+							</ol>
+							<div>
+								{% csrf_token %}{% for form in task_formset.forms %}{% for field in form %}{% if field.is_hidden %}
+								{{ field }}{% endif %}{% endfor %}{% endfor %}
+								<input type="hidden" name="story_id" id="story_id" value="{{ story.id }}" />
+								<input id="submit" name="submit" type="submit" value="Submit Changes" />
+							</div>
+						</fieldset>
+					</form>

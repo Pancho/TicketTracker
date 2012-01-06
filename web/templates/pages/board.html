@@ -1,0 +1,5 @@
+{% extends 'skeleton.html' %}{% block title %}TicketTracker - Board{% endblock title %}
+{% block main %}<div id="tt-board">
+				<h2 class="tt-board">Board{% if not current_sprint %} - No Active Sprint{% endif %}</h2>{% if current_sprint %}
+				{% include 'blocks/board_columns.html' %}{% endif %}
+			</div>{% endblock main %}

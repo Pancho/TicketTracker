@@ -1,0 +1,2 @@
+{% load story_tags %}{% load user_tags %}{% for story in sprint.story_set.all %}"{{ story.title }}","{{ story.story_description }}",{% for task in story.task_set.all %}"<p>{{ task.description }}({{ task.score }}) - {{ task.owner.first_name }} {{ task.owner.last_name|name_initial }}.</p>"{% endfor %},{% if story.is_timeboxed %}[{{ story|calculate_score }}]{% else %}{{ story|calculate_score }}{% endif %}
+{% endfor %}
