@@ -112,10 +112,6 @@ LOGIN_REDIRECT_URL = '/' #Home
 
 AUTH_PROFILE_MODULE = 'web.Profile'
 
-SERVER_EMAIL = 'support@panco.si'
-
-EMAIL_LOG = 'support_log@panco.si'
-
 FIXTURE_DIRS = (
 	here('fixtures/'),
 )
