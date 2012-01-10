@@ -21,6 +21,7 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, primary_key=True)
 	company = models.CharField(max_length=1024)
 
+
 	def __unicode__(self):
 		return u'%s profile' % self.user
 
@@ -34,10 +35,18 @@ class Sprint(models.Model):
 	one_day_score = models.IntegerField()
 
 
+	def __unicode__(self):
+		return u'Sprint %d, named: %s' % (self.sprint_number, self.name)
+
+
 class Availability(models.Model):
 	user = models.ForeignKey(to=User)
 	sprint = models.ForeignKey(to=Sprint)
 	days = models.IntegerField(null=True, blank=True)
+
+
+	def __unicode__(self):
+		return u'User %s %s for sprint number %d' % (self.user.first_name, self.user.first_name, self.sprint.sprint_number)
 
 
 class Story(models.Model):
@@ -56,6 +65,10 @@ class Story(models.Model):
 	time_boxed = models.NullBooleanField(default=False)
 
 
+	def __unicode__(self):
+		return u'Story %s' % (self.title)
+
+
 class Task(models.Model):
 	description = models.CharField(max_length=1024)
 	score = models.IntegerField(null=True, blank=True)
@@ -64,9 +77,17 @@ class Task(models.Model):
 	owner = models.ForeignKey(to=User, null=True, blank=True)
 
 
+	def __unicode__(self):
+		return u'Task %s for story %s (%s)' % (self.description, self.story.title, 'assigned' if self.owner is not None else 'not assigned')
+
+
 class BoardPrototype(models.Model):
 	columns_json = models.TextField()
 	readable_description = models.TextField()
+
+
+	def __unicode__(self):
+		return u'Borad prototype description %s' % (self.readable_description)
 
 
 	def construct_board(self, sprint):
@@ -90,11 +111,19 @@ class Board(models.Model):
 	from_prototype = models.ForeignKey(to=BoardPrototype)
 
 
+	def __unicode__(self):
+		return u'Borad for sprint %d' % (self.sprint.sprint_number)
+
+
 class BoardColumn(models.Model):
 	title = models.CharField(max_length=256)
 	tag = models.CharField(max_length=256)
 	board = models.ForeignKey(to=Board)
 	order = models.IntegerField()
+
+
+	def __unicode__(self):
+		return u'Borad column %s (%s), order: %d' % (self.title, self.tag, self.order)
 
 
 	def get_stories(self):
