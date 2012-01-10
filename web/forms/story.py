@@ -120,7 +120,7 @@ class FireForm(utils.TTForm):
 			fire_task.score = self.cleaned_data['score']
 			fire_task.owner = owner
 		else:
-			fire_task = models.Task(description='Complete', score=self.cleaned_data['score'], state="WAITING", owner=owner, story=story)
+			fire_task = models.Task(description='Complete', score=self.cleaned_data['score'], state="TO_WAITING", owner=owner, story=story)
 		fire_task.save()
 		
 		return {
