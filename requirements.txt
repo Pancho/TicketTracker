@@ -1,0 +1,4 @@
+# Do "pip install -U -r requirements.txt" to install
+# requirements for the project
+
+django-debug-toolbar==0.9.1
