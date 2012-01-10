@@ -1,6 +1,7 @@
 import ply.yacc as yacc
+import logging
 
-from lexer import tokens
+from lexer import tokens, t_NUMBER
 
 class Story(object):
 	def __init__(self, title, description, stories, tags):
@@ -13,12 +14,31 @@ class Story(object):
 		return u"Story(%s,%s,%s,%s)" % (repr(self.title), repr(self.description), repr(self.stories), repr(self.tags))
 
 class Task(object):
-	def __init__(self, text, taskmeta):
+	def __init__(self, text, taskmeta_list):
 		self.text = text
-		self.taskmeta = taskmeta
+		self.taskmeta_list = taskmeta_list
+		self.tags = []
+		self.points = None
+		for el in self.taskmeta_list:
+			if el.type == 'NUMBER': 
+				if self.points:
+					logging.error("Task metadata includes more than one number!")
+					raise SyntaxError #("Task metadata includes more than one number!")
+				self.points = int(el.value)
+			elif el.type == "TAG":
+				self.tags.append(el.value)
+			elif el.type == "TEXT":
+				self.tags.append(el.value)
+			else:
+				raise SyntaxError
+		
+		if not self.points:
+			logging.error("Task matadata must include exactly one number (number of points)")
+			raise SyntaxError
 
 	def __repr__(self):
-		return u"Task(%s,%s)" % (repr(self.text), repr(self.taskmeta))
+		return u"Task(%s,%s)" % (repr(self.text), repr(self.taskmeta_list))
+
 
 
 class TextLine(object):
@@ -78,12 +98,16 @@ def p_expression_textualelement3(p):
 	
 # multispace
 def p_expression_multispace1(p):
-	'multispace : SPACE multispace'
-	p[0] = p[1]
+	'multispace_some : SPACE multispace_some'
+	p[0] = p[1] + p[2]
 def p_expression_multispace2(p):
-	'multispace : SPACE'
+	'multispace_some : SPACE'
 	p[0] = p[1]
 def p_expression_multispace3(p):
+	'multispace : multispace_some'
+	p[0] = p[1]
+
+def p_expression_multispace4(p):
 	'multispace :'
 	pass
 	
@@ -97,13 +121,35 @@ def p_expression_task(p):
 	p[0] = Task(p[1], p[3])
 	
 def p_expression_taskmeta(p):
-	'taskmeta : LBRACKET textualelement RBRACKET'
+	'taskmeta : LBRACKET taskmeta_list RBRACKET'
 	p[0] = p[2]
+
+def p_expression_taskmeta_list(p):
+	'''
+		taskmeta_list : TEXT
+		taskmeta_list : TAG
+		taskmeta_list : NUMBER
+	'''
+	p[0] = [p.slice[1]]
+
+def p_expression_taskmeta_list2(p):
+	'''
+		taskmeta_list : taskmeta_list multispace_some TEXT
+		taskmeta_list : taskmeta_list multispace_some TAG
+		taskmeta_list : taskmeta_list multispace_some NUMBER
+	'''
+	p[0] = p[1]
+	print p.slice[3]
+	p[0].append(p.slice[3])
+	
+	
+
+
+	
 
 	
 	
 def p_error(p):
-	print "AHAAAAAAA"
 	raise Exception(repr(p))
 	
 def get_parser(start):

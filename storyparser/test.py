@@ -40,6 +40,10 @@ class Lexer(unittest.TestCase):
 		res = self.tokenize("321 1")	
 		self.assertEqual(repr(res), "[LexToken(NUMBER,'321',1,0), LexToken(SPACE,' ',1,3), LexToken(NUMBER,'1',1,4)]")
 
+	def test_number(self):
+		res = self.tokenize("a321 1")	
+		self.assertEqual(repr(res), "[LexToken(TEXT,'a321',1,0), LexToken(SPACE,' ',1,4), LexToken(NUMBER,'1',1,5)]")
+
 
 	def test_newline(self):
 		res = self.tokenize("#tag\n-")	
@@ -118,9 +122,23 @@ class Parser(unittest.TestCase):
 	def test_task(self):
 		self.parser = yacc.get_parser('task') # we are testing just part of the parser
 		res = self.parse("-a [2]")
-		self.assertEqual(repr(res), "Task(TextLine('a ',[]),TextLine('2',[]))")
+		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4)])")
+		res = self.parse("-a  [2]")
+		self.assertEqual(repr(res), "Task(TextLine('a  ',[]),[LexToken(NUMBER,'2',1,5)])")
+		res = self.parse("-a [2 a]")
+		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4), LexToken(TEXT,'a',1,6)])")
+		res = self.parse("-a [2  a]")
+		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4), LexToken(TEXT,'a',1,7)])")
+		res = self.parse("-a [a 2]")
+		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(TEXT,'a',1,4), LexToken(NUMBER,'2',1,6)])")
+		res = self.parse("-a [2 #tag]")
+		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4), LexToken(TAG,'#tag',1,6)])")
 
-		
+		self.assertRaises(IndexError, self.parse, "-a [2 2]")
+		self.assertRaises(IndexError, self.parse, "-a [aa]")
+		self.assertRaises(Exception, self.parse, "-a []")
+
+
 
 if __name__ == '__main__':
 	logging.basicConfig(level = logging.INFO)
