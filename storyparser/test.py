@@ -54,7 +54,7 @@ from yacc import Story, TextLine
 
 class Parser(unittest.TestCase):
 	def parse(self, s):
-		return self.parser.parse(s)
+		return self.parser.parse(s, tracking = True)
 		
 	def test_textline(self):
 		self.parser = yacc.get_parser('textualelement') # we are testing just part of the parser
@@ -83,29 +83,35 @@ class Parser(unittest.TestCase):
 	
 	def test_storytitle(self):
 		self.parser = yacc.get_parser('storytitle') # we are testing just part of the parser
-		res = self.parse("=a")
+		res = self.parse("=a\n")
 		self.assertEqual(repr(res), "TextLine('a',[])")
 		# test spacing
-		res = self.parse("= a")
+		res = self.parse("= a\n")
 		self.assertEqual(repr(res), "TextLine('a',[])")
-		res = self.parse("=  a")
+		res = self.parse("=  a\n")
 		self.assertEqual(repr(res), "TextLine('a',[])")
-		res = self.parse("=  a ")
+		res = self.parse("=  a \n")
 		
 
 	def test_storybody(self):
 		self.parser = yacc.get_parser('storybody') # we are testing just part of the parser
-		res = self.parse("description")
+		res = self.parse("description\n")
 		self.assertEqual(repr(res), "TextLine('description',[])")
 
 	def test_story(self):
 		self.parser = yacc.get_parser('story') # we are testing just part of the parser
-		res = self.parse("=st\ndescription")
+		res = self.parse("=st\ndescription\n")
 		self.assertEqual(repr(res), "Story('st','description',[],[])")
 
-		res = self.parse("=st#tag\ndescript#tag2 ion")
+		res = self.parse("=st#tag\ndescript#tag2 ion\n")
 		self.assertEqual(repr(res), "Story('st#tag','descript#tag2 ion',[],['#tag', '#tag2'])")
 
+	def test_story_with_tasks(self):
+		self.parser = yacc.get_parser('story') # we are testing just part of the parser
+		res = self.parse("=st\ndescription\n-t1 [1]\n")
+		self.assertEqual(repr(res), "Story('st','description',[Task(TextLine('t1 ',[]),[LexToken(NUMBER,'1',1,21)])],[])")
+		res = self.parse("=st\ndescription\n-t1 [1 #tag1]\n")
+		self.assertEqual(repr(res), "Story('st','description',[Task(TextLine('t1 ',[]),[LexToken(NUMBER,'1',1,21), LexToken(TAG,'#tag1',1,23)])],['#tag1'])")
 
 	def test_taskdescription(self):
 		self.parser = yacc.get_parser('taskdescription') # we are testing just part of the parser
@@ -121,22 +127,29 @@ class Parser(unittest.TestCase):
 
 	def test_task(self):
 		self.parser = yacc.get_parser('task') # we are testing just part of the parser
-		res = self.parse("-a [2]")
+		res = self.parse("-a [2]\n")
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4)])")
-		res = self.parse("-a  [2]")
+		res = self.parse("-a  [2]\n")
 		self.assertEqual(repr(res), "Task(TextLine('a  ',[]),[LexToken(NUMBER,'2',1,5)])")
-		res = self.parse("-a [2 a]")
+		res = self.parse("-a [2 a]\n")
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4), LexToken(TEXT,'a',1,6)])")
-		res = self.parse("-a [2  a]")
+		res = self.parse("-a [2  a]\n")
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4), LexToken(TEXT,'a',1,7)])")
-		res = self.parse("-a [a 2]")
+		res = self.parse("-a [a 2]\n")
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(TEXT,'a',1,4), LexToken(NUMBER,'2',1,6)])")
-		res = self.parse("-a [2 #tag]")
+		res = self.parse("-a [2 #tag]\n")
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4), LexToken(TAG,'#tag',1,6)])")
 
-		self.assertRaises(IndexError, self.parse, "-a [2 2]")
-		self.assertRaises(IndexError, self.parse, "-a [aa]")
-		self.assertRaises(Exception, self.parse, "-a []")
+		self.assertRaises(IndexError, self.parse, "-a [2 2]\n")
+		self.assertRaises(IndexError, self.parse, "-a [aa]\n")
+
+
+	def test_task_error(self):
+		self.parser = yacc.get_parser('task') # we are testing just part of the parser
+		res = self.parse("-a \n")
+		self.assertEqual(repr(res), "Exception('Task is missing metadata in square brackets (line: 1, character: 5)',)")
+		res = self.parse("-a []\n")
+		self.assertEqual(repr(res), "Exception('Task is missing metadata in square brackets (line: 1, character: 7)',)")
 
 
 
