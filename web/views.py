@@ -337,7 +337,20 @@ def burndown_chart(request):
 	return render_to_response('pages/burndown_chart.html', ctx, RequestContext(request))
 
 
-@login_required
+def burndown_chart_full_screen(request):
+	current_sprint_queryset = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())
+	if current_sprint_queryset.count():
+		current_sprint = current_sprint_queryset[0]
+	else:
+		current_sprint = None
+
+	ctx = {
+		'current_sprint': current_sprint,
+	}
+
+	return render_to_response('pages/burndown_chart_full_screen.html', ctx, RequestContext(request))
+
+
 def burndown_chart_data(request, id=None):
 	if not id:
 		selected_sprint = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())[0]
