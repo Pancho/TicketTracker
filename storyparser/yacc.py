@@ -18,24 +18,32 @@ class Task(object):
 		self.text = text
 		self.taskmeta_list = taskmeta_list
 		self.tags = []
-		self.points = None
+		self.score = None
+		self.owner = None
 		for el in self.taskmeta_list:
 			if el.type == 'NUMBER': 
-				if self.points:
+				if self.score:
 					logging.error("Task metadata includes more than one number!")
 					raise SyntaxError #("Task metadata includes more than one number!")
-				self.points = int(el.value)
+				self.score = int(el.value)
+			elif el.type == 'PERSON': 
+				if self.owner:
+					logging.error("Task metadata includes more than one owner!")
+					raise SyntaxError #("Task metadata includes more than one number!")
+				self.owner = el.value
 			elif el.type == 'TAG':
 				self.tags.append(el.value)
 			elif el.type == 'TEXT':
 				self.tags.append(el.value)
 			else:
+				logging.error("Unknown token inside the task metadata: %s" % (repr(el)))
+				
 				raise SyntaxError
-		
-		if not self.points:
-			logging.error("Task matadata must include exactly one number (number of points)")
-			raise SyntaxError
 
+#		if not self.score:
+#			logging.error("Task matadata must include exactly one number (score)")
+#			raise SyntaxError
+			
 	def __repr__(self):
 		return u"Task(%s,%s)" % (repr(self.text), repr(self.taskmeta_list))
 
@@ -55,6 +63,11 @@ def p_expression_story(p):
 	'story : storytitle storybody'
 	p[0] = Story(p[1].text, p[2].text, [], p[1].tags + p[2].tags)
 
+def p_expression_story2(p):
+	'story : storytitle'
+	p[0] = Story(p[1].text, "", [], p[1].tags)
+
+
 def p_expression_story_with_tasks(p):
 	'story : story task'
 	p[0] = p[1]
@@ -62,24 +75,34 @@ def p_expression_story_with_tasks(p):
 	p[0].tags.extend(p[2].tags)
 
 def p_expression_storytitle(p):
-	'storytitle : EQUALS multispace textualelement NEWLINE'
-	p[0] = p[3]
+	'storytitle : EQUALS textualelement NEWLINE'
+	p[0] = p[2]
 
 def p_expression_storybody(p):
 	'storybody : textualelement NEWLINE'
 	p[0] = p[1]
 
+def p_expression_storybody2(p):
+	'storybody : storybody storybody'
+	p[0] = p[1]
+	p[0].text += "\n" + p[2].text
+	p[0].tags.extend(p[2].tags)
+
 # textualelement is basically anything, tags are correctly parsed and propagated
-# it can start with text or number or tag, [NOT space, minus, equals]
+# it can start with text or number or tag, [NOT minus, equals]
 
 def p_expression_textualelement_b(p):
 	'''	textualelement_b : TEXT
 		textualelement_b : NUMBER
+		textualelement_b : SPACE
 	'''
 	p[0] = TextLine(p[1], [])
 
 def p_expression_textualelement_b_tag(p):
-	'textualelement_b : TAG'
+	'''
+		textualelement_b : TAG
+		textualelement_b : PERSON
+	'''
 	p[0] = TextLine(p[1], [p[1]])
 
 def p_expression_textualelement(p):
@@ -87,7 +110,7 @@ def p_expression_textualelement(p):
 	p[0] = p[1]
 
 def p_expression_textualelement2(p):
-	'''	textualelement : textualelement SPACE
+	'''	
 		textualelement : textualelement MINUS
 		textualelement : textualelement EQUALS
 	'''
@@ -109,36 +132,50 @@ def p_expression_multispace1(p):
 def p_expression_multispace2(p):
 	'multispace_some : SPACE'
 	p[0] = p[1]
-def p_expression_multispace3(p):
-	'multispace : multispace_some'
-	p[0] = p[1]
+#def p_expression_multispace3(p):
+#	'multispace : multispace_some'
+#	p[0] = p[1]
 
-def p_expression_multispace4(p):
-	'multispace :'
-	pass
+# since texutalelement takes spaces, we don't have a need for zero-length multispaces
+#def p_expression_multispace4(p):
+#	'multispace :'
+#	pass
 	
-	
-def p_expression_taskdescription(p):
-	'taskdescription : MINUS multispace textualelement'
-	p[0] = p[3]
 
 def p_expression_task(p):
-	'task : taskdescription multispace taskmeta NEWLINE'
-	p[0] = Task(p[1], p[3])
+	'task : taskdescription taskmeta NEWLINE'
+	p[0] = Task(p[1], p[2])
+
+def p_expression_taskdescription(p):
+	'taskdescription : MINUS textualelement'
+	p[0] = p[2]
 
 def p_expression_task_missing(p):
-	'task : taskdescription multispace error NEWLINE'
+	'task : taskdescription error NEWLINE'
 	p[0] = Exception("Task is missing metadata in square brackets (line: %i, character: %i)" % (p.lexer.lineno, p.lexer.lexpos))
 	
 def p_expression_taskmeta(p):
 	'taskmeta : LBRACKET taskmeta_list RBRACKET'
 	p[0] = p[2]
 
+def p_expression_taskmeta_problem(p):
+	'taskmeta : LBRACKET error RBRACKET'
+	logging.error("Task metadata cannot be parsed correctly (line: %i, character: %i)" % (p.lexer.lineno, p.lexer.lexpos))					
+	raise Exception("Task metadata cannot be parsed correctly (line: %i, character: %i)" % (p.lexer.lineno, p.lexer.lexpos))
+
+
+def p_expression_taskmeta_list_empty(p):
+	'''
+		taskmeta_list : 
+	'''
+	p[0] = []
+
 def p_expression_taskmeta_list(p):
 	'''
 		taskmeta_list : TEXT
 		taskmeta_list : TAG
 		taskmeta_list : NUMBER
+		taskmeta_list : PERSON
 	'''
 	p[0] = [p.slice[1]]
 
@@ -147,6 +184,7 @@ def p_expression_taskmeta_list2(p):
 		taskmeta_list : taskmeta_list multispace_some TEXT
 		taskmeta_list : taskmeta_list multispace_some TAG
 		taskmeta_list : taskmeta_list multispace_some NUMBER
+		taskmeta_list : taskmeta_list multispace_some PERSON
 	'''
 	p[0] = p[1]
 	p[0].append(p.slice[3])

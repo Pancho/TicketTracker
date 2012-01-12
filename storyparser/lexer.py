@@ -11,6 +11,7 @@ tokens = (
 	'SPACE',
 	'TEXT',
 	'TAG',
+	'PERSON',
 	'NUMBER',
 	'NEWLINE',
 	)
@@ -21,7 +22,8 @@ t_RBRACKET = r'\]'
 t_EQUALS =   r'='
 t_MINUS =    r'-'
 t_TAG =      r'\#[\d\w_]*'
-t_TEXT =     r'[^\[\]=\-\n\ \#0-9][^\[\]=\-\n\ \#]*'	# text can't start with a number, but can be continued with one
+t_PERSON =   r'\@[\d\w_]*'
+t_TEXT =     r'[^\[\]=\-\n\ \#0-9\@][^\[\]=\-\n\ \#\@]*'	# text can't start with a number, but can be continued with one
 t_NUMBER =   r'\d+'
 t_NEWLINE =  r'\n'
 t_SPACE = r'\ '
