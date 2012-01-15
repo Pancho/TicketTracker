@@ -13,14 +13,41 @@ class Story(object):
 	def __repr__(self):
 		return u"Story(%s,%s,%s,%s)" % (repr(self.title), repr(self.description), repr(self.tasks), repr(self.tags))
 
+
+	def to_text(self):	
+		lines = []
+		# make sure we don't duplicate tags that are already in the title
+		# and make sure they are unique
+		new_tags = []
+		for t in self.tags:
+			try:
+				self.title.index(t)
+			except ValueError: # this means it is not in there
+				if t not in new_tags: # this is small number, so linear scan is faster than set/dict
+					new_tags.append(t)
+		
+		
+		tags = " ".join(new_tags)		# make unique
+		lines.append("= %s %s" % (self.title, tags))
+		if self.description:
+			lines.append(self.description)
+		for t in self.tasks:
+			lines.append(t.to_text())
+		lines.append("") # we always finish with a new line!
+		return "\n".join(lines)
+
 class Task(object):
-	def __init__(self, text, taskmeta_list):
+	def __init__(self, text):
 		self.text = text
-		self.taskmeta_list = taskmeta_list
 		self.tags = []
 		self.score = None
 		self.owner = None
-		for el in self.taskmeta_list:
+		self.taskmeta_list = []
+		
+	def parse_taskmeta(self, taskmeta_list):
+		self.taskmeta_list = taskmeta_list
+	
+		for el in taskmeta_list:
 			if el.type == 'NUMBER': 
 				if self.score:
 					logging.error("Task metadata includes more than one number!")
@@ -39,14 +66,29 @@ class Task(object):
 				logging.error("Unknown token inside the task metadata: %s" % (repr(el)))
 				
 				raise SyntaxError
-
 #		if not self.score:
 #			logging.error("Task matadata must include exactly one number (score)")
 #			raise SyntaxError
+
 			
 	def __repr__(self):
 		return u"Task(%s,%s)" % (repr(self.text), repr(self.taskmeta_list))
 
+	def to_text(self):
+		taskmeta_str_list = []
+		if self.score:
+			taskmeta_str_list.append(unicode(self.score))
+		for t in list(set(self.tags)):
+			taskmeta_str_list.append(t)
+		if self.owner:	
+			taskmeta_str_list.append(self.owner)
+		
+		a = "- " + self.text 
+		if taskmeta_str_list:
+			taskmeta_string = " ".join(taskmeta_str_list)
+			
+			a += " [" + taskmeta_string + "]" 
+		return a
 
 
 class TextLine(object):
@@ -144,16 +186,18 @@ def p_expression_multispace2(p):
 
 def p_expression_task(p):
 	'task : taskdescription taskmeta NEWLINE'
-	p[0] = Task(p[1], p[2])
+	p[0] = Task(p[1])
+	p[0].parse_taskmeta(p[2])
+
+# we allow also leaving out taskmeta entirely
+def p_expression_task_no_taskmeta(p):
+	'task : taskdescription NEWLINE'
+	p[0] = Task(p[1])
 
 def p_expression_taskdescription(p):
 	'taskdescription : MINUS textualelement'
 	p[0] = p[2]
 
-def p_expression_task_missing(p):
-	'task : taskdescription error NEWLINE'
-	p[0] = Exception("Task is missing metadata in square brackets (line: %i, character: %i)" % (p.lexer.lineno, p.lexer.lexpos))
-	
 def p_expression_taskmeta(p):
 	'taskmeta : LBRACKET taskmeta_list RBRACKET'
 	p[0] = p[2]
