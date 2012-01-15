@@ -29,6 +29,7 @@ urlpatterns = patterns('web.views',
 
     # Burndown Chart
     url(r'^burndown-chart/$', 'burndown_chart', name='web.burndown_chart'),
+    url(r'^burndown-chart-full-screen/$', 'burndown_chart_full_screen', name='web.burndown_chart_full_screen'),
     url(r'^burndown-chart/data/$', 'burndown_chart_data', name='web.burndown_chart_data'),
     url(r'^burndown-chart/data/sprint/(?P<id>\d+)/$', 'burndown_chart_data', name='web.burndown_chart_data_sprint'),
 
