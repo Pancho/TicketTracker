@@ -102,6 +102,7 @@ INSTALLED_APPS = (
 	'django.contrib.admin',
 	'django.contrib.admindocs',
 	'web',
+	'storyparser',
 )
 
 LOGIN_URL = '/login'
