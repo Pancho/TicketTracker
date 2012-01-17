@@ -1,6 +1,8 @@
+import logging
 
 import yacc
 import web.models as wm
+from django.core.exceptions import ObjectDoesNotExist
 
 class Converter(object):
 	def __init__(self):
@@ -123,7 +125,12 @@ class Converter(object):
 										
 			if task.owner:
 				# make sure we catch the right errors here
-				dtask.owner = wm.User.objects.filter(username = task.owner)
+				try:
+					dtask.owner = wm.User.objects.get(username = task.owner)
+				except ObjectDoesNotExist:
+					logging.warning("Could not resolve username: %s, we will add it as regular tag" % task.owner)
+					tags.append(task.owner)
+
 			dtask.story = dstory
 			dtasks.append(dtask)
 		

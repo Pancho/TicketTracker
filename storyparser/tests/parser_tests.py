@@ -203,7 +203,26 @@ class Parser(unittest.TestCase):
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[])")
 
 
-class Converter(unittest.TestCase):
+# these two methods are done as global and still having self, so we can actually rise right exceptions
+# and at the same time call them from multiple classes
+# we could also use multiple inheritance, but then it's harder to comprehend and trace what's happening
+def compare_django_stories(self, ds1, ds2):
+	self.assertEqual(ds1.title, ds2.title)
+	self.assertEqual(ds1.story_description, ds2.story_description)
+	self.assertEqual(ds1.is_burning, ds2.is_burning)
+	self.assertEqual(ds1.time_boxed, ds2.time_boxed)
+	self.assertEqual(ds1.is_green, ds2.is_green)
+	self.assertEqual(ds1.moscow, ds2.moscow)
+	
+def compare_django_tasks(self, dts1, dts2):
+	for n, dt1 in enumerate(dts1):
+		dt2 = dts2[n]
+		self.assertEqual(dt1.description, dt2.description)
+		self.assertEqual(dt1.score, dt2.score)
+		self.assertEqual(dt1.state, dt2.state)	
+
+
+class TestsConverter(unittest.TestCase):
 	def test_django_story_to_text(self):
 		dstory = wm.Story(title = "story_title", story_description = "story_description")
 		res = converter.Converter.django_story_to_text(dstory, [])	
@@ -275,65 +294,52 @@ class Converter(unittest.TestCase):
 		self.assertEqual(res, "- task_description [5 @duh]")
 
 
-	def check_django_stories(self, ds1, ds2):
-		self.assertEqual(ds1.title, ds2.title)
-		self.assertEqual(ds1.story_description, ds2.story_description)
-		self.assertEqual(ds1.is_burning, ds2.is_burning)
-		self.assertEqual(ds1.time_boxed, ds2.time_boxed)
-		self.assertEqual(ds1.is_green, ds2.is_green)
-		self.assertEqual(ds1.moscow, ds2.moscow)
-		
-	def check_django_tasks(self, dts1, dts2):
-		for n, dt1 in enumerate(dts1):
-			dt2 = dts2[n]
-			self.assertEqual(dt1.description, dt2.description)
-			self.assertEqual(dt1.score, dt2.score)
-			self.assertEqual(dt1.state, dt2.state)	
+	
 		
 	def test_text_to_django_story(self):
 		story_text = "= a\nb"
 		dstory = wm.Story(title = " a", story_description = "b")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
+		compare_django_stories(self, rstory, dstory)		
 
 		story_text = "= a #fire\nb"
 		dstory = wm.Story(title = " a #fire", story_description = "b", is_burning = True)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)
+		compare_django_stories(self, rstory, dstory)
 
 		story_text = "= a #timebox\nb"
 		dstory = wm.Story(title = " a #timebox", story_description = "b", time_boxed = True)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)
+		compare_django_stories(self, rstory, dstory)
 
 		story_text = "= a #green\nb"
 		dstory = wm.Story(title = " a #green", story_description = "b", is_green = True)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)
+		compare_django_stories(self, rstory, dstory)
 
 
 		story_text = "= a #must\nb"
 		dstory = wm.Story(title = " a #must", story_description = "b", moscow = "M")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)
+		compare_django_stories(self, rstory, dstory)
 		story_text = "= a #should\nb"
 		dstory = wm.Story(title = " a #should", story_description = "b", moscow = "S")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)
+		compare_django_stories(self, rstory, dstory)
 		story_text = "= a #could\nb"
 		dstory = wm.Story(title = " a #could", story_description = "b", moscow = "C")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)
+		compare_django_stories(self, rstory, dstory)
 		story_text = "= a #would\nb"
 		dstory = wm.Story(title = " a #would", story_description = "b", moscow = "W")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)
+		compare_django_stories(self, rstory, dstory)
 
 		# tricky... we need to figure out how to handle tag removal in the future, in order to sync from form to text
 		story_text = "= a #t1 #t2\nb"
 		dstory = wm.Story(title = " a #t1 #t2", story_description = "b", tags = "#t1 #t2")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)
+		compare_django_stories(self, rstory, dstory)
 
 
 
@@ -343,16 +349,16 @@ class Converter(unittest.TestCase):
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 
 		# empty taskmeta
 		story_text = "= a\nb\n-c []"
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c ")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 
 
 		# score taskmeta
@@ -360,8 +366,8 @@ class Converter(unittest.TestCase):
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c ", score = 1)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 
 		# TEST USER - THIS ONE FAILS UNTIL PANCHO TELLS US WHERE THE @nick CAN BE RESOLVED
 		'''
@@ -369,8 +375,8 @@ class Converter(unittest.TestCase):
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c ", score = 1)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 		'''
 
 
@@ -379,16 +385,16 @@ class Converter(unittest.TestCase):
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c  [#t1]")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 
 		# tag plus score
 		story_text = "= a\nb\n-c [#t1 1]"
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c  [#t1]", score = 1)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 
 
 		# #closed
@@ -396,24 +402,24 @@ class Converter(unittest.TestCase):
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c ", state = "TO_CLOSED")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 
 		#closed
 		story_text = "= a\nb\n-c [#work]"
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c ", state = "TO_WORKING")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 
 		# badass tag combo
 		story_text = "= a\nb\n-c [1 #work #t1]"
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c  [#t1]", state = "TO_WORKING", score = 1)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask])		
 
 		# badass tag double combo
 		story_text = "= a\nb\n-c [1 #work #t1]\n-d [2 #closed]"
@@ -421,8 +427,8 @@ class Converter(unittest.TestCase):
 		dtask1 = wm.Task(description = "c  [#t1]", state = "TO_WORKING", score = 1)
 		dtask2 = wm.Task(description = "d ", state = "TO_CLOSED", score = 2)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
-		self.check_django_stories(rstory, dstory)		
-		self.check_django_tasks(rtasks, [dtask1, dtask2])		
+		compare_django_stories(self, rstory, dstory)		
+		compare_django_tasks(self, rtasks, [dtask1, dtask2])		
 
 		
 
