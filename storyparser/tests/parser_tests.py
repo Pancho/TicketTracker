@@ -127,6 +127,11 @@ class Parser(unittest.TestCase):
 		res = self.parse("description\n\n\n\n")
 		self.assertEqual(repr(res), "TextLine('description\\n\\n\\n',[])")
 
+		# let's try to end with a tab - this is harder to swallow
+		self.parser = yacc.get_parser('storybody')
+		res = self.parse("description\n \n\t\n")
+		self.assertEqual(repr(res), "TextLine('description\\n \\n\\t',[])")
+
 
 	def test_story(self):
 		self.parser = yacc.get_parser('story') # we are testing just part of the parser
