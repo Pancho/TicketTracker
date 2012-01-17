@@ -1,14 +1,16 @@
 from pprint import pprint
 import unittest, logging, os, sys
 # this is ugly beyond recognition, it is necessary as python does not have relative imports: we add parent dir to this one to the path
-sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), "../"))
+sys.path.insert(0, os.path.join(os.path.abspath(os.path.dirname(__file__)), "../../"))
 os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
 
 
-import lexer
-import yacc
-import converter
+import storyparser.lexer as lexer
+import storyparser.yacc as yacc
+import storyparser.converter as converter
 import web.models as wm
+
+from storyparser.yacc import Story, TextLine
 
 
 class Lexer(unittest.TestCase):
@@ -56,7 +58,6 @@ class Lexer(unittest.TestCase):
 		self.assertEqual(repr(res), "[LexToken(TAG,'#tag',1,0), LexToken(NEWLINE,'\\n',1,4), LexToken(MINUS,'-',1,5)]")
 
 
-from yacc import Story, TextLine
 
 class Parser(unittest.TestCase):
 	def parse(self, s):
@@ -422,8 +423,6 @@ class Converter(unittest.TestCase):
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
 		self.check_django_stories(rstory, dstory)		
 		self.check_django_tasks(rtasks, [dtask1, dtask2])		
-
-		
 
 		
 

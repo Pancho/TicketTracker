@@ -1,0 +1,235 @@
+Created by PLY version 3.4 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> textualelement
+Rule 1     story -> storytitle storybody
+Rule 2     story -> storytitle
+Rule 3     story -> story task
+Rule 4     storytitle -> EQUALS textualelement NEWLINE
+Rule 5     storybody -> textualelement NEWLINE
+Rule 6     storybody -> storybody storybody
+Rule 7     textualelement_b -> TEXT
+Rule 8     textualelement_b -> NUMBER
+Rule 9     textualelement_b -> SPACE
+Rule 10    textualelement_b -> TAG
+Rule 11    textualelement_b -> PERSON
+Rule 12    textualelement -> textualelement_b
+Rule 13    textualelement -> textualelement MINUS
+Rule 14    textualelement -> textualelement EQUALS
+Rule 15    textualelement -> textualelement textualelement_b
+Rule 16    multispace_some -> SPACE multispace_some
+Rule 17    multispace_some -> SPACE
+Rule 18    task -> taskdescription taskmeta NEWLINE
+Rule 19    task -> taskdescription NEWLINE
+Rule 20    taskdescription -> MINUS textualelement
+Rule 21    taskmeta -> LBRACKET taskmeta_list RBRACKET
+Rule 22    taskmeta -> LBRACKET error RBRACKET
+Rule 23    taskmeta_list -> <empty>
+Rule 24    taskmeta_list -> TEXT
+Rule 25    taskmeta_list -> TAG
+Rule 26    taskmeta_list -> NUMBER
+Rule 27    taskmeta_list -> PERSON
+Rule 28    taskmeta_list -> taskmeta_list multispace_some TEXT
+Rule 29    taskmeta_list -> taskmeta_list multispace_some TAG
+Rule 30    taskmeta_list -> taskmeta_list multispace_some NUMBER
+Rule 31    taskmeta_list -> taskmeta_list multispace_some PERSON
+
+Terminals, with rules where they appear
+
+EQUALS               : 4 14
+LBRACKET             : 21 22
+MINUS                : 13 20
+NEWLINE              : 4 5 18 19
+NUMBER               : 8 26 30
+PERSON               : 11 27 31
+RBRACKET             : 21 22
+SPACE                : 9 16 17
+TAG                  : 10 25 29
+TEXT                 : 7 24 28
+error                : 22
+
+Nonterminals, with rules where they appear
+
+multispace_some      : 16 28 29 30 31
+story                : 3
+storybody            : 1 6 6
+storytitle           : 1 2
+task                 : 3
+taskdescription      : 18 19
+taskmeta             : 18
+taskmeta_list        : 21 28 29 30 31
+textualelement       : 4 5 13 14 15 20 0
+textualelement_b     : 12 15
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . textualelement
+    (12) textualelement -> . textualelement_b
+    (13) textualelement -> . textualelement MINUS
+    (14) textualelement -> . textualelement EQUALS
+    (15) textualelement -> . textualelement textualelement_b
+    (7) textualelement_b -> . TEXT
+    (8) textualelement_b -> . NUMBER
+    (9) textualelement_b -> . SPACE
+    (10) textualelement_b -> . TAG
+    (11) textualelement_b -> . PERSON
+
+    TEXT            shift and go to state 4
+    NUMBER          shift and go to state 5
+    SPACE           shift and go to state 3
+    TAG             shift and go to state 7
+    PERSON          shift and go to state 6
+
+    textualelement                 shift and go to state 1
+    textualelement_b               shift and go to state 2
+
+state 1
+
+    (0) S' -> textualelement .
+    (13) textualelement -> textualelement . MINUS
+    (14) textualelement -> textualelement . EQUALS
+    (15) textualelement -> textualelement . textualelement_b
+    (7) textualelement_b -> . TEXT
+    (8) textualelement_b -> . NUMBER
+    (9) textualelement_b -> . SPACE
+    (10) textualelement_b -> . TAG
+    (11) textualelement_b -> . PERSON
+
+    MINUS           shift and go to state 10
+    EQUALS          shift and go to state 9
+    TEXT            shift and go to state 4
+    NUMBER          shift and go to state 5
+    SPACE           shift and go to state 3
+    TAG             shift and go to state 7
+    PERSON          shift and go to state 6
+
+    textualelement_b               shift and go to state 8
+
+state 2
+
+    (12) textualelement -> textualelement_b .
+
+    MINUS           reduce using rule 12 (textualelement -> textualelement_b .)
+    EQUALS          reduce using rule 12 (textualelement -> textualelement_b .)
+    TEXT            reduce using rule 12 (textualelement -> textualelement_b .)
+    NUMBER          reduce using rule 12 (textualelement -> textualelement_b .)
+    SPACE           reduce using rule 12 (textualelement -> textualelement_b .)
+    TAG             reduce using rule 12 (textualelement -> textualelement_b .)
+    PERSON          reduce using rule 12 (textualelement -> textualelement_b .)
+    $end            reduce using rule 12 (textualelement -> textualelement_b .)
+
+
+state 3
+
+    (9) textualelement_b -> SPACE .
+
+    MINUS           reduce using rule 9 (textualelement_b -> SPACE .)
+    EQUALS          reduce using rule 9 (textualelement_b -> SPACE .)
+    TEXT            reduce using rule 9 (textualelement_b -> SPACE .)
+    NUMBER          reduce using rule 9 (textualelement_b -> SPACE .)
+    SPACE           reduce using rule 9 (textualelement_b -> SPACE .)
+    TAG             reduce using rule 9 (textualelement_b -> SPACE .)
+    PERSON          reduce using rule 9 (textualelement_b -> SPACE .)
+    $end            reduce using rule 9 (textualelement_b -> SPACE .)
+
+
+state 4
+
+    (7) textualelement_b -> TEXT .
+
+    MINUS           reduce using rule 7 (textualelement_b -> TEXT .)
+    EQUALS          reduce using rule 7 (textualelement_b -> TEXT .)
+    TEXT            reduce using rule 7 (textualelement_b -> TEXT .)
+    NUMBER          reduce using rule 7 (textualelement_b -> TEXT .)
+    SPACE           reduce using rule 7 (textualelement_b -> TEXT .)
+    TAG             reduce using rule 7 (textualelement_b -> TEXT .)
+    PERSON          reduce using rule 7 (textualelement_b -> TEXT .)
+    $end            reduce using rule 7 (textualelement_b -> TEXT .)
+
+
+state 5
+
+    (8) textualelement_b -> NUMBER .
+
+    MINUS           reduce using rule 8 (textualelement_b -> NUMBER .)
+    EQUALS          reduce using rule 8 (textualelement_b -> NUMBER .)
+    TEXT            reduce using rule 8 (textualelement_b -> NUMBER .)
+    NUMBER          reduce using rule 8 (textualelement_b -> NUMBER .)
+    SPACE           reduce using rule 8 (textualelement_b -> NUMBER .)
+    TAG             reduce using rule 8 (textualelement_b -> NUMBER .)
+    PERSON          reduce using rule 8 (textualelement_b -> NUMBER .)
+    $end            reduce using rule 8 (textualelement_b -> NUMBER .)
+
+
+state 6
+
+    (11) textualelement_b -> PERSON .
+
+    MINUS           reduce using rule 11 (textualelement_b -> PERSON .)
+    EQUALS          reduce using rule 11 (textualelement_b -> PERSON .)
+    TEXT            reduce using rule 11 (textualelement_b -> PERSON .)
+    NUMBER          reduce using rule 11 (textualelement_b -> PERSON .)
+    SPACE           reduce using rule 11 (textualelement_b -> PERSON .)
+    TAG             reduce using rule 11 (textualelement_b -> PERSON .)
+    PERSON          reduce using rule 11 (textualelement_b -> PERSON .)
+    $end            reduce using rule 11 (textualelement_b -> PERSON .)
+
+
+state 7
+
+    (10) textualelement_b -> TAG .
+
+    MINUS           reduce using rule 10 (textualelement_b -> TAG .)
+    EQUALS          reduce using rule 10 (textualelement_b -> TAG .)
+    TEXT            reduce using rule 10 (textualelement_b -> TAG .)
+    NUMBER          reduce using rule 10 (textualelement_b -> TAG .)
+    SPACE           reduce using rule 10 (textualelement_b -> TAG .)
+    TAG             reduce using rule 10 (textualelement_b -> TAG .)
+    PERSON          reduce using rule 10 (textualelement_b -> TAG .)
+    $end            reduce using rule 10 (textualelement_b -> TAG .)
+
+
+state 8
+
+    (15) textualelement -> textualelement textualelement_b .
+
+    MINUS           reduce using rule 15 (textualelement -> textualelement textualelement_b .)
+    EQUALS          reduce using rule 15 (textualelement -> textualelement textualelement_b .)
+    TEXT            reduce using rule 15 (textualelement -> textualelement textualelement_b .)
+    NUMBER          reduce using rule 15 (textualelement -> textualelement textualelement_b .)
+    SPACE           reduce using rule 15 (textualelement -> textualelement textualelement_b .)
+    TAG             reduce using rule 15 (textualelement -> textualelement textualelement_b .)
+    PERSON          reduce using rule 15 (textualelement -> textualelement textualelement_b .)
+    $end            reduce using rule 15 (textualelement -> textualelement textualelement_b .)
+
+
+state 9
+
+    (14) textualelement -> textualelement EQUALS .
+
+    MINUS           reduce using rule 14 (textualelement -> textualelement EQUALS .)
+    EQUALS          reduce using rule 14 (textualelement -> textualelement EQUALS .)
+    TEXT            reduce using rule 14 (textualelement -> textualelement EQUALS .)
+    NUMBER          reduce using rule 14 (textualelement -> textualelement EQUALS .)
+    SPACE           reduce using rule 14 (textualelement -> textualelement EQUALS .)
+    TAG             reduce using rule 14 (textualelement -> textualelement EQUALS .)
+    PERSON          reduce using rule 14 (textualelement -> textualelement EQUALS .)
+    $end            reduce using rule 14 (textualelement -> textualelement EQUALS .)
+
+
+state 10
+
+    (13) textualelement -> textualelement MINUS .
+
+    MINUS           reduce using rule 13 (textualelement -> textualelement MINUS .)
+    EQUALS          reduce using rule 13 (textualelement -> textualelement MINUS .)
+    TEXT            reduce using rule 13 (textualelement -> textualelement MINUS .)
+    NUMBER          reduce using rule 13 (textualelement -> textualelement MINUS .)
+    SPACE           reduce using rule 13 (textualelement -> textualelement MINUS .)
+    TAG             reduce using rule 13 (textualelement -> textualelement MINUS .)
+    PERSON          reduce using rule 13 (textualelement -> textualelement MINUS .)
+    $end            reduce using rule 13 (textualelement -> textualelement MINUS .)
+
