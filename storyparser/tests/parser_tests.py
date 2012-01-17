@@ -220,6 +220,7 @@ def compare_django_tasks(self, dts1, dts2):
 		self.assertEqual(dt1.description, dt2.description)
 		self.assertEqual(dt1.score, dt2.score)
 		self.assertEqual(dt1.state, dt2.state)	
+		self.assertEqual(dt1.owner, dt2.owner)	
 
 
 class TestsConverter(unittest.TestCase):

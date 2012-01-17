@@ -120,16 +120,18 @@ class Converter(object):
 					dtask.state = "TO_WORKING"
 				else:
 					tags.append(t)
-			if tags:
-				dtask.description += " [" + " ".join(tags) + "]"	
 										
 			if task.owner:
 				# make sure we catch the right errors here
 				try:
-					dtask.owner = wm.User.objects.get(username = task.owner)
+					dtask.owner = wm.User.objects.get(username = task.owner[1:])
 				except ObjectDoesNotExist:
 					logging.warning("Could not resolve username: %s, we will add it as regular tag" % task.owner)
 					tags.append(task.owner)
+
+			if tags:
+				dtask.description += " [" + " ".join(tags) + "]"	
+			
 
 			dtask.story = dstory
 			dtasks.append(dtask)

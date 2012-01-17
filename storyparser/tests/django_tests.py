@@ -17,7 +17,16 @@ class ConverterDjango(TestCase):
 	def test_username_fail_resolve(self):
 		story_text = "= a\nb\n-c [@a]"
 		dstory = wm.Story(title = " a", story_description = "b")
-		dtask = wm.Task(description = "c ")
+		dtask = wm.Task(description = "c  [@a]")
+		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
+		compare_django_stories(self, rstory, dstory)
+		compare_django_tasks(self, rtasks, [dtask])
+
+	def test_username_resolve(self):
+		u = wm.User.objects.create(username = "andraz")
+		story_text = "= a\nb\n-c [@andraz]"
+		dstory = wm.Story(title = " a", story_description = "b")
+		dtask = wm.Task(description = "c ", owner = u)
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
 		compare_django_stories(self, rstory, dstory)		
 		compare_django_tasks(self, rtasks, [dtask])		
