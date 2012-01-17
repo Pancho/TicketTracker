@@ -130,6 +130,13 @@ def p_expression_storybody2(p):
 	p[0].text += "\n" + p[2].text
 	p[0].tags.extend(p[2].tags)
 
+# make sure storybody can have newlines at the end
+def p_expression_storybody3(p):
+	'storybody : storybody NEWLINE'
+	p[0] = p[1]
+	p[0].text += "\n"
+
+
 # textualelement is basically anything, tags are correctly parsed and propagated
 # it can start with text or number or tag, [NOT minus, equals]
 

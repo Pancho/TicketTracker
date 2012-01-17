@@ -82,6 +82,8 @@ class Converter(object):
 		if text[-1] != "\n":	# fix it a bit so parser works better
 			text += "\n"
 		story = parser.parse(text, tracking = True)
+		if not story:
+			raise Exception("Story parsing wasn't successful")
 		dstory = wm.Story()
 		dstory.title = story.title
 		dstory.story_description = story.description
