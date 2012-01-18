@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from storyparser.converter import Converter
 
 import utils
 from web import models
@@ -60,6 +61,37 @@ class StoryForm(utils.TTForm):
 		return {
 			'completed': True,
 		    'story': story,
+		}
+
+
+class StoryParserForm(utils.TTForm):
+	id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+	story = forms.CharField(max_length=2048, label='User Story', widget=forms.Textarea({'cols': 100, 'rows': 20, 'class': 'tt-story-textarea'}))
+
+
+	def setup(self, request, last_post=None, initial=None):
+		if initial:
+			self.fields['id'].initial = initial.id
+			self.fields['story'].initial = Converter.django_story_to_text(initial, initial.task_set.all()).strip()
+
+	def process(self, request):
+		story, tasks = Converter.text_to_django_story(self.cleaned_data['story'])
+		print story.title
+		print story.story_description
+		print self.cleaned_data['id']
+		if self.cleaned_data['id'] and self.cleaned_data['id'] != '':
+			story.id = self.cleaned_data['id']
+		story.save()
+
+		for task in story.task_set.all():
+			task.delete()
+
+		for task in tasks:
+			task.story = story
+			task.save()
+
+		return {
+			'story': story
 		}
 
 

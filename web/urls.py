@@ -36,12 +36,15 @@ urlpatterns = patterns('web.views',
     # Backlog
 	url(r'^backlog/$', 'backlog', name='web.backlog'),
 	url(r'^backlog/story/edit/(?P<id>\d+)/$', 'backlog', name='web.backlog_story_edit'),
+	url(r'^backlog/story/edit/(?P<id>\d+)/story_parser/$', 'backlog', name='web.backlog_story_storyparser_edit'),
 	url(r'^backlog/story/delete/(?P<id>\d+)/$', 'backlog', {'delete_selected': True}, name='web.backlog_story_delete'),
 	url(r'^backlog/story/(?P<story_id>\d+)/tasks/$', 'backlog_tasks', name='web.backlog_tasks'),
 	url(r'^backlog/story/(?P<story_id>\d+)/copy/$', 'backlog_duplicate_story', name='web.backlog_duplicate_story'),
     # Backlog Forms
     url(r'^backlog/story/submit/$', 'process_form', {'form_class': forms.StoryForm, 'home_name': 'web.backlog'}, name='web.backlog_story_submit'),
     url(r'^backlog/story/submit/edit/(?P<params>\w+)/$', 'process_form', {'form_class': forms.StoryForm, 'home_name': 'web.backlog_tasks'}, name='web.backlog_story_edit_submit'),
+    url(r'^backlog/story/submit/storyparser/$', 'process_form', {'form_class': forms.StoryParserForm, 'home_name': 'web.backlog'}, name='web.backlog_story_storyparser_submit'),
+    url(r'^backlog/story/submit/edit/(?P<params>\w+)/storyparser/$', 'process_form', {'form_class': forms.StoryParserForm, 'home_name': 'web.backlog_story_storyparser_edit'}, name='web.backlog_story_storyparser_edit_submit'),
     url(r'^backlog/story/tasks/edit/(?P<params>\w+)/$', 'process_formset', {'form_class': forms.TaskForm, 'home_name': 'web.backlog_tasks'}, name='web.backlog_tasks_submit'),
 
 	# Sprint

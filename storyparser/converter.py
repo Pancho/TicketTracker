@@ -87,6 +87,7 @@ class Converter(object):
 		dstory = wm.Story()
 		dstory.title = story.title
 		dstory.story_description = story.description
+		dstory.state = 'BACKLOG'
 		
 		dstory_tags_list = []
 		for t in story.tags:
