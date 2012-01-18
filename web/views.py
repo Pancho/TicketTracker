@@ -426,11 +426,11 @@ def backlog(request, id = None, delete_selected=False):
 
 		if id:
 			try:
-				ctx['form'] = utils.init_form(request, reverse('web.backlog_story_edit_submit', args=[id]), forms.StoryForm, last_post, model_to_dict(models.Story.objects.get(id=id)))
+				ctx['form'] = utils.init_form(request, reverse('web.backlog_story_storyparser_edit_submit', args=[id]), forms.StoryParserForm, last_post, models.Story.objects.get(id=id))
 			except models.Story.DoesNotExist:
 				raise Http404
 		else:
-			ctx['form'] = utils.init_form(request, reverse('web.backlog_story_submit', args=[]), forms.StoryForm, last_post, {})
+			ctx['form'] = utils.init_form(request, reverse('web.backlog_story_submit', args=[]), forms.StoryParserForm, last_post, {})
 
 	return render_to_response('pages/backlog.html', ctx, RequestContext(request))
 
