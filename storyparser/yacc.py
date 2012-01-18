@@ -28,7 +28,7 @@ class Story(object):
 		
 		
 		tags = " ".join(new_tags)		# make unique
-		lines.append("= %s %s" % (self.title, tags))
+		lines.append("=%s %s" % (self.title, tags))
 		if self.description:
 			lines.append(self.description)
 		for t in self.tasks:
@@ -83,11 +83,11 @@ class Task(object):
 		if self.owner:	
 			taskmeta_str_list.append(self.owner)
 		
-		a = "- " + self.text 
+		a = "-" + self.text 
 		if taskmeta_str_list:
 			taskmeta_string = " ".join(taskmeta_str_list)
 			
-			a += " [" + taskmeta_string + "]" 
+			a += "[" + taskmeta_string + "]" 
 		return a
 
 
