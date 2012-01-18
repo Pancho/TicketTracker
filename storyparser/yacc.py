@@ -14,6 +14,18 @@ class Story(object):
 		return u"Story(%s,%s,%s,%s)" % (repr(self.title), repr(self.description), repr(self.tasks), repr(self.tags))
 
 
+	def parse_taskmeta(self, taskmeta_list):
+		# this isn't really taskmeta but more anything between the brackets
+		self.taskmeta_list = taskmeta_list
+	
+		for el in taskmeta_list:
+			if el.type == 'TAG':
+				self.tags.append(el.value)
+			else:
+				logging.error("Unknown token inside the story metadata: %s" % (repr(el)))
+				
+				raise SyntaxError
+
 	def to_text(self):	
 		lines = []
 		# make sure we don't duplicate tags that are already in the title
@@ -28,7 +40,9 @@ class Story(object):
 		
 		
 		tags = " ".join(new_tags)		# make unique
-		lines.append("=%s %s" % (self.title, tags))
+		lines.append("=%s" % (self.title,))
+		if tags:
+			lines.append("[%s]" % (tags,))
 		if self.description:
 			lines.append(self.description)
 		for t in self.tasks:
@@ -105,6 +119,12 @@ def p_expression_story(p):
 	'story : storytitle storybody'
 	p[0] = Story(p[1].text, p[2].text, [], p[1].tags + p[2].tags)
 
+# i think the following is a bit hackish, but will do for now
+def p_expression_story3(p):
+	'story : storytitle taskmeta NEWLINE storybody'
+	p[0] = Story(p[1].text, p[4].text, [], p[1].tags + p[4].tags)
+	p[0].parse_taskmeta(p[2])
+
 def p_expression_story2(p):
 	'story : storytitle'
 	p[0] = Story(p[1].text, "", [], p[1].tags)
@@ -119,6 +139,8 @@ def p_expression_story_with_tasks(p):
 def p_expression_storytitle(p):
 	'storytitle : EQUALS textualelement NEWLINE'
 	p[0] = p[2]
+
+
 
 def p_expression_storybody(p):
 	'storybody : textualelement NEWLINE'

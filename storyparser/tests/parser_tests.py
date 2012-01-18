@@ -243,46 +243,46 @@ class TestsConverter(unittest.TestCase):
 	def test_django_story_to_text(self):
 		dstory = wm.Story(title = "story_title", story_description = "story_description")
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=story_title \nstory_description\n")
+		self.assertEqual(res, "=story_title\nstory_description\n")
 
 		dstory.is_green = True
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=story_title #green\nstory_description\n")
+		self.assertEqual(res, "=story_title\n[#green]\nstory_description\n")
 		dstory.is_green = False
 		
 		dstory.is_burning = True
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=story_title #fire\nstory_description\n")
+		self.assertEqual(res, "=story_title\n[#fire]\nstory_description\n")
 		dstory.is_burning = False
 
 		dstory.moscow = 'M'
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=story_title #must\nstory_description\n")
+		self.assertEqual(res, "=story_title\n[#must]\nstory_description\n")
 		dstory.moscow = 'S'
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=story_title #should\nstory_description\n")
+		self.assertEqual(res, "=story_title\n[#should]\nstory_description\n")
 		dstory.moscow = 'C'
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=story_title #could\nstory_description\n")
+		self.assertEqual(res, "=story_title\n[#could]\nstory_description\n")
 		dstory.moscow = 'W'
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=story_title #would\nstory_description\n")
+		self.assertEqual(res, "=story_title\n[#would]\nstory_description\n")
 		dstory.moscow = None
 		
 		dstory.tags = "#t1 #t2"
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=story_title #t1 #t2\nstory_description\n")
+		self.assertEqual(res, "=story_title\n[#t1 #t2]\nstory_description\n")
 		dstory.title = "title with tag #t2" 	# here we make sure we don'd duplicate tags if they are already in the title
 		res = converter.Converter.django_story_to_text(dstory, [])	
-		self.assertEqual(res, "=title with tag #t2 #t1\nstory_description\n")
+		self.assertEqual(res, "=title with tag #t2\n[#t1]\nstory_description\n")
 		dstory.tags = None
 		dstory.title = "story_title"
 		
 		dtask = wm.Task(description = "task description")
 		res = converter.Converter.django_story_to_text(dstory, [dtask])	
-		self.assertEqual(res, "=story_title \nstory_description\n-task description\n")
+		self.assertEqual(res, "=story_title\nstory_description\n-task description\n")
 		res = converter.Converter.django_story_to_text(dstory, [dtask, dtask])	
-		self.assertEqual(res, "=story_title \nstory_description\n-task description\n-task description\n")
+		self.assertEqual(res, "=story_title\nstory_description\n-task description\n-task description\n")
 
 
 	def test_django_task_to_text(self):
