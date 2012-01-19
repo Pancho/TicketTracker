@@ -41,7 +41,7 @@ urlpatterns = patterns('web.views',
 	url(r'^backlog/story/(?P<story_id>\d+)/tasks/$', 'backlog_tasks', name='web.backlog_tasks'),
 	url(r'^backlog/story/(?P<story_id>\d+)/copy/$', 'backlog_duplicate_story', name='web.backlog_duplicate_story'),
     # Backlog Forms
-    url(r'^backlog/story/submit/$', 'process_form', {'form_class': forms.StoryForm, 'home_name': 'web.backlog'}, name='web.backlog_story_submit'),
+    url(r'^backlog/story/submit/$', 'process_form', {'form_class': forms.StoryParserForm, 'home_name': 'web.backlog'}, name='web.backlog_story_submit'),
     url(r'^backlog/story/submit/edit/(?P<params>\w+)/$', 'process_form', {'form_class': forms.StoryForm, 'home_name': 'web.backlog_tasks'}, name='web.backlog_story_edit_submit'),
     url(r'^backlog/story/submit/storyparser/$', 'process_form', {'form_class': forms.StoryParserForm, 'home_name': 'web.backlog'}, name='web.backlog_story_storyparser_submit'),
     url(r'^backlog/story/submit/edit/(?P<params>\w+)/storyparser/$', 'process_form', {'form_class': forms.StoryParserForm, 'home_name': 'web.backlog_story_storyparser_edit'}, name='web.backlog_story_storyparser_edit_submit'),

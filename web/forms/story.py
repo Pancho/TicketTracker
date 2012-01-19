@@ -66,21 +66,21 @@ class StoryForm(utils.TTForm):
 
 class StoryParserForm(utils.TTForm):
 	id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
-	story = forms.CharField(max_length=2048, label='User Story', widget=forms.Textarea({'cols': 100, 'rows': 20, 'class': 'tt-story-textarea'}))
+	story = forms.CharField(label='User Story', widget=forms.Textarea({'cols': 100, 'rows': 20, 'class': 'tt-story-textarea'}))
 
 
 	def setup(self, request, last_post=None, initial=None):
 		if initial:
 			self.fields['id'].initial = initial.id
-			self.fields['story'].initial = Converter.django_story_to_text(initial, initial.task_set.all()).strip()
+			self.fields['story'].initial = Converter.django_story_to_text(initial, initial.task_set.all())
 
 	def process(self, request):
+		print self.cleaned_data['story']
 		story, tasks = Converter.text_to_django_story(self.cleaned_data['story'])
-		print story.title
-		print story.story_description
-		print self.cleaned_data['id']
 		if self.cleaned_data['id'] and self.cleaned_data['id'] != '':
 			story.id = self.cleaned_data['id']
+		else:
+			story.state = 'BACKLOG'
 		story.save()
 
 		for task in story.task_set.all():
