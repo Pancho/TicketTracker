@@ -160,7 +160,7 @@ class Parser(unittest.TestCase):
 		res = self.parse("=st\ndescription\n-t1 [1]\n")
 		self.assertEqual(repr(res), "Story('st','description',[Task(TextLine('t1 ',[]),[LexToken(NUMBER,'1',1,21)])],[])")
 		res = self.parse("=st\ndescription\n-t1 [1 #tag1]\n")
-		self.assertEqual(repr(res), "Story('st','description',[Task(TextLine('t1 ',[]),[LexToken(NUMBER,'1',1,21), LexToken(TAG,'#tag1',1,23)])],['#tag1'])")
+		self.assertEqual(repr(res), "Story('st','description',[Task(TextLine('t1 ',[]),[LexToken(NUMBER,'1',1,21), LexToken(TAG,'#tag1',1,23)])],[])")
 
 	def test_taskdescription(self):
 		self.parser = yacc.get_parser('taskdescription') # we are testing just part of the parser
@@ -206,6 +206,10 @@ class Parser(unittest.TestCase):
 
 		self.assertRaises(IndexError, self.parse, "-a [2 2]\n")
 		res = self.parse("-a [aa]\n")
+		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(TEXT,'aa',1,4)])")
+
+		# test for space beween [] and new line
+		res = self.parse("-a [aa] \n")
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(TEXT,'aa',1,4)])")
 
 		
@@ -310,6 +314,20 @@ class TestsConverter(unittest.TestCase):
 		res = converter.Converter.django_task_to_task(dtask).to_text()	
 		self.assertEqual(res, "-task_description[5 @duh]")
 
+
+	def test_text_to_django_story_crlf(self):
+		# here we check if CRLF gets correctly handled (converted to only LF before parsing)
+		story_text = "= a\r\nb"
+		dstory = wm.Story(title = " a", story_description = "b")
+		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
+		compare_django_stories(self, rstory, dstory)		
+
+	def test_text_to_django_story_crlf(self):
+		# here we check if CRLF gets correctly handled (converted to only LF before parsing)
+		story_text = "= a\r\nb\n\n-c\n\n"
+		dstory = wm.Story(title = " a", story_description = "b\n")
+		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
+		compare_django_stories(self, rstory, dstory)		
 
 	
 		

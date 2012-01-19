@@ -134,7 +134,7 @@ def p_expression_story_with_tasks(p):
 	'story : story task'
 	p[0] = p[1]
 	p[0].tasks.append(p[2])
-	p[0].tags.extend(p[2].tags)
+	#p[0].tags.extend(p[2].tags)	# do not add tags from tasks to story tags
 
 def p_expression_storytitle(p):
 	'storytitle : EQUALS textualelement NEWLINE'
@@ -214,7 +214,10 @@ def p_expression_multispace2(p):
 	
 
 def p_expression_task(p):
-	'task : taskdescription taskmeta NEWLINE'
+	'''
+		task : taskdescription taskmeta NEWLINE
+		task : taskdescription taskmeta multispace_some NEWLINE
+	'''
 	p[0] = Task(p[1])
 	p[0].parse_taskmeta(p[2])
 

@@ -79,8 +79,8 @@ class Converter(object):
 	@staticmethod
 	def text_to_django_story(text):
 		parser = yacc.get_parser('story') # we are testing just part of the parser
-		if text[-1] != "\n":	# fix it a bit so parser works better
-			text += "\n"
+		text = text.replace("\r\n", "\n") # convert crlf -> lf
+		text = text.strip("\n") + "\n"	  # make sure there are no multiple new lines after the tasks 
 		story = parser.parse(text, tracking = True)
 		if not story:
 			raise Exception("Story parsing wasn't successful")
