@@ -246,7 +246,7 @@ def p_expression_task(p):
 
 def p_expression_taskmeta(p):
 	'''
-		taskmeta : LBRACKET taskmeta_list RBRACKET
+		taskmeta : LBRACKET taskmeta_list multispace RBRACKET
 	'''
 	p[0] = p[2]
 

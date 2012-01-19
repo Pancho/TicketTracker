@@ -232,6 +232,11 @@ class Parser(unittest.TestCase):
 		
 		self.assertRaises(Exception, self.parse, "-a [aa =d]\n")
 
+
+		# now test spaces left and right
+		res = self.parse("-a [ #b ]\n")
+		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(TAG,'#b',1,5)])")		
+
 	def test_task_error(self):
 		self.parser = yacc.get_parser('task') # we are testing just part of the parser
 		res = self.parse("-a \n")
