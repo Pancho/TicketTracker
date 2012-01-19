@@ -750,6 +750,7 @@ MOSCOW_PRIORITY_MAP = {
 	'S': 2,
 	'C': 3,
 	'W': 4,
+	'': 5,
 }
 
 

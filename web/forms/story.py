@@ -75,8 +75,7 @@ class StoryParserForm(utils.TTForm):
 			self.fields['story'].initial = Converter.django_story_to_text(initial, initial.task_set.all())
 
 	def process(self, request):
-		print self.cleaned_data['story']
-		story, tasks = Converter.text_to_django_story(self.cleaned_data['story'])
+		story, tasks = Converter.text_to_django_story(self.cleaned_data['story'].replace(r'\r\n', r'\n'))
 		if self.cleaned_data['id'] and self.cleaned_data['id'] != '':
 			story.id = self.cleaned_data['id']
 		else:
