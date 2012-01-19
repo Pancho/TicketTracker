@@ -153,6 +153,24 @@ class Parser(unittest.TestCase):
 		res = self.parse("=st\n-a [1]\n")
 		self.assertEqual(repr(res), "Story('st','',[Task(TextLine('a ',[]),[LexToken(NUMBER,'1',1,8)])],[])")
 
+		# no description, but tags
+		res = self.parse("=Fix zemanta.com/demo\n[#fire #must]\n-a\n")
+		self.assertEqual(repr(res), "Story('Fix zemanta.com/demo','',[Task(TextLine('a',[]),[])],['#fire', '#must'])")
+		res = self.parse("=Fix zemanta.com/demo\n[#fire #must]\n\n-a\n")
+		self.assertEqual(repr(res), "Story('Fix zemanta.com/demo','',[Task(TextLine('a',[]),[])],['#fire', '#must'])")
+		res = self.parse("=Fix zemanta.com/demo\n[#fire #must] \n\n-a\n")
+		self.assertEqual(repr(res), "Story('Fix zemanta.com/demo','',[Task(TextLine('a',[]),[])],['#fire', '#must'])")
+		res = self.parse("=Fix zemanta.com/demo\n [#fire #must] \n\n-a\n")
+		self.assertEqual(repr(res), "Story('Fix zemanta.com/demo','',[Task(TextLine('a',[]),[])],['#fire', '#must'])")
+		res = self.parse("=Fix zemanta.com/demo\n\n [#fire #must]\n\n-a\n")
+		self.assertEqual(repr(res), "Story('Fix zemanta.com/demo','',[Task(TextLine('a',[]),[])],['#fire', '#must'])")
+		res = self.parse("=Fix zemanta.com/demo\n\n [#fire #must] \n\n-a\n")
+		self.assertEqual(repr(res), "Story('Fix zemanta.com/demo','',[Task(TextLine('a',[]),[])],['#fire', '#must'])")
+		res = self.parse("=Fix zemanta.com/demo\n \n [#fire #must] \n\n-a\n")
+		self.assertEqual(repr(res), "Story('Fix zemanta.com/demo','',[Task(TextLine('a',[]),[])],['#fire', '#must'])")
+		res = self.parse("=Fix zemanta.com/demo\n \n [#fire #must] \n \n-a\n")
+		self.assertEqual(repr(res), "Story('Fix zemanta.com/demo',' ',[Task(TextLine('a',[]),[])],['#fire', '#must'])")
+
 
 
 	def test_story_with_tasks(self):
@@ -162,8 +180,9 @@ class Parser(unittest.TestCase):
 		res = self.parse("=st\ndescription\n-t1 [1 #tag1]\n")
 		self.assertEqual(repr(res), "Story('st','description',[Task(TextLine('t1 ',[]),[LexToken(NUMBER,'1',1,21), LexToken(TAG,'#tag1',1,23)])],[])")
 
+	'''
 	def test_taskdescription(self):
-		self.parser = yacc.get_parser('taskdescription') # we are testing just part of the parser
+		self.parser = yacc.get_parser('task') # we are testing just part of the parser
 		res = self.parse("-a")
 		self.assertEqual(repr(res), "TextLine('a',[])")
 		# test spacing
@@ -173,18 +192,13 @@ class Parser(unittest.TestCase):
 		self.assertEqual(repr(res), "TextLine('  a',[])")
 		res = self.parse("-  a#tag")
 		self.assertEqual(repr(res), "TextLine('  a#tag',['#tag'])")
-
+	'''
 
 
 	def test_taskmeta(self):
 		self.parser = yacc.get_parser('taskmeta') # we are testing just part of the parser
 		res = self.parse("[2]")
 		self.assertEqual(repr(res), "[LexToken(NUMBER,'2',1,1)]")
-
-	def test_taskdescription(self):
-		self.parser = yacc.get_parser('taskdescription') # we are testing just part of the parser
-		res = self.parse("- a")
-		self.assertEqual(repr(res), "TextLine(' a',[])")
 
 
 	def test_task(self):
@@ -204,7 +218,10 @@ class Parser(unittest.TestCase):
 		res = self.parse("-a [2 @nick]\n")
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(NUMBER,'2',1,4), LexToken(PERSON,'@nick',1,6)])")
 
-		self.assertRaises(IndexError, self.parse, "-a [2 2]\n")
+		# should this be right
+		res = self.parse("-a [2 2]\n")
+		self.assertEqual(repr(res), "None")
+
 		res = self.parse("-a [aa]\n")
 		self.assertEqual(repr(res), "Task(TextLine('a ',[]),[LexToken(TEXT,'aa',1,4)])")
 
@@ -244,6 +261,21 @@ def compare_django_tasks(self, dts1, dts2):
 
 
 class TestsConverter(unittest.TestCase):
+
+
+
+
+
+	def test_django_story_to_text_existing_tags(self):
+		dstory = wm.Story(title = "story_title", story_description = "story_description")
+		dtask = wm.Task(description = "task description [#abc]")
+		res = converter.Converter.django_story_to_text(dstory, [dtask])	
+		self.assertEqual(res, "=story_title\nstory_description\n-task description [#abc]\n")
+		dtask.state = "TO_CLOSED"
+		res = converter.Converter.django_story_to_text(dstory, [dtask])	
+		self.assertEqual(res, "=story_title\nstory_description\n-task description [#abc #done]\n")
+		
+
 	def test_django_story_to_text(self):
 		dstory = wm.Story(title = "story_title", story_description = "story_description")
 		res = converter.Converter.django_story_to_text(dstory, [])	
@@ -296,7 +328,7 @@ class TestsConverter(unittest.TestCase):
 
 		dtask.state = "TO_CLOSED"
 		res = converter.Converter.django_task_to_task(dtask).to_text()	
-		self.assertEqual(res, "-task_description[#closed]")
+		self.assertEqual(res, "-task_description[#done]")
 		dtask.state = "TO_WORKING"
 		res = converter.Converter.django_task_to_task(dtask).to_text()	
 		self.assertEqual(res, "-task_description[#work]")
@@ -377,8 +409,6 @@ class TestsConverter(unittest.TestCase):
 		compare_django_stories(self, rstory, dstory)
 
 
-
-
 	def test_text_to_django_story_with_tasks(self):
 		story_text = "= a\nb\n-c"
 		dstory = wm.Story(title = " a", story_description = "b")
@@ -432,15 +462,15 @@ class TestsConverter(unittest.TestCase):
 		compare_django_tasks(self, rtasks, [dtask])		
 
 
-		# #closed
-		story_text = "= a\nb\n-c [#closed]"
+		# #done
+		story_text = "= a\nb\n-c [#done]"
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c ", state = "TO_CLOSED")
 		(rstory, rtasks) = converter.Converter.text_to_django_story(story_text)	
 		compare_django_stories(self, rstory, dstory)		
 		compare_django_tasks(self, rtasks, [dtask])		
 
-		#closed
+		#done
 		story_text = "= a\nb\n-c [#work]"
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask = wm.Task(description = "c ", state = "TO_WORKING")
@@ -457,7 +487,7 @@ class TestsConverter(unittest.TestCase):
 		compare_django_tasks(self, rtasks, [dtask])		
 
 		# badass tag double combo
-		story_text = "= a\nb\n-c [1 #work #t1]\n-d [2 #closed]"
+		story_text = "= a\nb\n-c [1 #work #t1]\n-d [2 #done]"
 		dstory = wm.Story(title = " a", story_description = "b")
 		dtask1 = wm.Task(description = "c  [#t1]", state = "TO_WORKING", score = 1)
 		dtask2 = wm.Task(description = "d ", state = "TO_CLOSED", score = 2)

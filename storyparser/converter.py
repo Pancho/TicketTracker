@@ -13,11 +13,21 @@ class Converter(object):
 	def django_task_to_task(django_task):
 		dt = django_task
 		task = yacc.Task(dt.description)
+		
+		# here we do an evil trick!
+		# we reparse the task so we can extract tasks to be added to proper tags
+		# TODO: have tags field in the model, so we don't need to reparse here
+		parser = yacc.get_parser('task_suffix') # we are testing just part of the parser
+		res = parser.parse(task.text + "\n")
+		task = yacc.Task(res.text.text)
+		task.tags = res.tags	
+		
+			
 		task.score = dt.score
 		if dt.state is None:
 			pass	
 		elif dt.state == "TO_CLOSED":
-			task.tags.append("#closed")
+			task.tags.append("#done")
 		elif dt.state == "TO_WORKING":
 			task.tags.append("#work")
 		elif dt.state == "TO_WAITING":
@@ -117,7 +127,7 @@ class Converter(object):
 			dtask.description = task.text.text
 			tags = []
 			for t in task.tags:
-				if t == "#closed":
+				if t == "#done":
 					dtask.state = "TO_CLOSED"
 				elif t == "#work":
 					dtask.state = "TO_WORKING"
