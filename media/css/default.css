@@ -98,11 +98,13 @@ h2 a {color:inherit;text-decoration:none;border-bottom:1px dotted;}
 .tt-side-list li.tt-story-S {border-left:10px solid #2809FF;}
 .tt-side-list li.tt-story-C {border-left:10px solid #0D9FD9;}
 .tt-side-list li.tt-story-W {border-left:10px solid #5f8e00;}
+.tt-side-list li.tt-story- {border-left:10px solid #000;}
 
 .tt-side-list li.tt-story-M span {background:#F5380C;}
 .tt-side-list li.tt-story-S span {background:#2809FF;}
 .tt-side-list li.tt-story-C span {background:#0D9FD9;}
 .tt-side-list li.tt-story-W span {background:#5f8e00;}
+.tt-side-list li.tt-story- span {background:#000;}
 
 #tt-backlog {margin:0 0 0 25em;}
 
@@ -158,6 +160,7 @@ h2 a {color:inherit;text-decoration:none;border-bottom:1px dotted;}
 .tt-form fieldset ol li input {width:15em;}
 .tt-form fieldset ol li label {float:left;font-size:1.5em;width:10em;}
 .tt-form fieldset ol li textarea {width:30em;}
+.tt-form fieldset ol li textarea.tt-story-textarea {width:auto;}
 .tt-form fieldset ol li select {width:15em;}
 .tt-form fieldset ol li span.tt-form-help {display:block;clear:both;font-size:1.5em;margin:.666666em 0 0 0;color:#0D9FD9;}
 .tt-form fieldset ol li.tt-checkbox input {width:auto;}
