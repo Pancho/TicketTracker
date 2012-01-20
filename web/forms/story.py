@@ -77,9 +77,13 @@ class StoryParserForm(utils.TTForm):
 	def process(self, request):
 		story, tasks = Converter.text_to_django_story(self.cleaned_data['story'].replace(r'\r\n', r'\n'))
 		if self.cleaned_data['id'] and self.cleaned_data['id'] != '':
-			story.id = self.cleaned_data['id']
+			existing_story = models.Story.objects.get(id=self.cleaned_data['id'])
+			story.id = existing_story.id
+			story.sprint = existing_story.sprint
+			story.created_by = request.user
 		else:
 			story.state = 'BACKLOG'
+			story.created_by = request.user
 		story.save()
 
 		for task in story.task_set.all():
