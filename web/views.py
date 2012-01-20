@@ -405,7 +405,7 @@ def burndown_chart_data(request, id=None):
 
 # Backlog
 @login_required
-def backlog(request, id = None, delete_selected=False):
+def backlog(request, id = None, delete_selected=False, sprint=False):
 	last_post = utils.get_session_data(request) or {}
 
 	if delete_selected:
@@ -426,7 +426,11 @@ def backlog(request, id = None, delete_selected=False):
 
 		if id:
 			try:
-				ctx['form'] = utils.init_form(request, reverse('web.backlog_story_storyparser_edit_submit', args=[id]), forms.StoryParserForm, last_post, models.Story.objects.get(id=id))
+				if sprint:
+					story = models.Story.objects.get(id=id)
+					ctx['form'] = utils.init_form(request, reverse('web.backlog_story_storyparser_edit_submit_planning', args=[story.sprint.id]), forms.StoryParserForm, last_post, story)
+				else:
+					ctx['form'] = utils.init_form(request, reverse('web.backlog_story_storyparser_edit_submit', args=[id]), forms.StoryParserForm, last_post, models.Story.objects.get(id=id))
 			except models.Story.DoesNotExist:
 				raise Http404
 		else:
