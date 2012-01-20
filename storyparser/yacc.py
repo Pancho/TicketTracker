@@ -113,28 +113,47 @@ class TextLine(object):
 	def __repr__(self):
 		return u"TextLine(%s,%s)" % (repr(self.text), self.tags)
 
-#start = 'textualelement'
 
 def p_expression_story(p):
-	'story : storytitle storybody'
-	p[0] = Story(p[1].text, p[2].text, [], p[1].tags + p[2].tags)
-
-# i think the following is a bit hackish, but will do for now
-def p_expression_story3(p):
-	'story : storytitle taskmeta NEWLINE storybody'
-	p[0] = Story(p[1].text, p[4].text, [], p[1].tags + p[4].tags)
-	p[0].parse_taskmeta(p[2])
+	'story : storytitleandtags storybody'
+	p[0] = p[1]
+	p[0].description = p[2].text
+	p[0].tags.extend(p[2].tags)
 
 def p_expression_story2(p):
-	'story : storytitle'
+	'story : storytitleandtags'
+	p[0] = p[1]
+	
+def p_expression_multinewline_some(p):
+	'''
+		multinewline_some : NEWLINE
+		multinewline_some : multispace_some NEWLINE
+		multinewline_some : multinewline_some NEWLINE
+		
+	'''
+	pass
+
+def p_expression_storytitleandtags(p):
+	'''
+		storytitleandtags : storytitle
+		storytitleandtags : storytitle multispace taskmeta multispace multinewline_some
+		storytitleandtags : storytitle multinewline_some multispace taskmeta multispace multinewline_some
+	'''
+	
 	p[0] = Story(p[1].text, "", [], p[1].tags)
+	# there is some wierd behaviour I don't understand so this is a workaround
+	if len(p)>2:
+		if type(p[4]) == list:
+			p[0].parse_taskmeta(p[4])
+		elif type(p[3]) == list:
+			p[0].parse_taskmeta(p[3])
 
 
 def p_expression_story_with_tasks(p):
 	'story : story task'
 	p[0] = p[1]
 	p[0].tasks.append(p[2])
-	p[0].tags.extend(p[2].tags)
+	#p[0].tags.extend(p[2].tags)	# do not add tags from tasks to story tags
 
 def p_expression_storytitle(p):
 	'storytitle : EQUALS textualelement NEWLINE'
@@ -198,37 +217,37 @@ def p_expression_textualelement3(p):
 	
 # multispace
 def p_expression_multispace1(p):
-	'multispace_some : SPACE multispace_some'
+	'multispace_some : multispace_some SPACE'
 	p[0] = p[1] + p[2]
 def p_expression_multispace2(p):
 	'multispace_some : SPACE'
 	p[0] = p[1]
-#def p_expression_multispace3(p):
-#	'multispace : multispace_some'
-#	p[0] = p[1]
 
-# since texutalelement takes spaces, we don't have a need for zero-length multispaces
-#def p_expression_multispace4(p):
-#	'multispace :'
-#	pass
+def p_expression_multispace(p):
+	'''
+		multispace : multispace_some
+		multispace :
+	'''
+	pass
+
 	
+def p_expression_task_suffix(p):
+	'''
+		task_suffix : textualelement NEWLINE
+		task_suffix : textualelement taskmeta multispace NEWLINE
+	'''
+	p[0] = Task(p[1])
+	if p[2] != '\n':
+		p[0].parse_taskmeta(p[2])
 
 def p_expression_task(p):
-	'task : taskdescription taskmeta NEWLINE'
-	p[0] = Task(p[1])
-	p[0].parse_taskmeta(p[2])
-
-# we allow also leaving out taskmeta entirely
-def p_expression_task_no_taskmeta(p):
-	'task : taskdescription NEWLINE'
-	p[0] = Task(p[1])
-
-def p_expression_taskdescription(p):
-	'taskdescription : MINUS textualelement'
+	'task : MINUS task_suffix'
 	p[0] = p[2]
 
 def p_expression_taskmeta(p):
-	'taskmeta : LBRACKET taskmeta_list RBRACKET'
+	'''
+		taskmeta : LBRACKET taskmeta_list multispace RBRACKET
+	'''
 	p[0] = p[2]
 
 def p_expression_taskmeta_problem(p):
