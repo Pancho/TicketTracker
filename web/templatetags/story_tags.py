@@ -6,7 +6,8 @@ register = template.Library()
 def calculate_score(story):
 	to_return = 0
 	for task in story.task_set.all():
-		to_return += task.score
+		if task:
+			to_return += task.score
 	return to_return
 
 
