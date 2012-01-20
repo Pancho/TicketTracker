@@ -10,5 +10,6 @@ def get_full_score(availability):
 def get_remaining_score(availability):
 	to_return = availability.days * availability.sprint.one_day_score
 	for task in availability.user.task_set.filter(story__sprint=availability.sprint).all():
-		to_return -= task.score
+		if task.score:
+			to_return -= task.score
 	return to_return
