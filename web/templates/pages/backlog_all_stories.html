@@ -1,0 +1,11 @@
+{% extends 'skeleton.html' %}{% load story_tags %}{% block title %}Backlog - All stories in Backlog{% endblock title %}
+{% block main %}<div id="tt-backlog">
+	<h2 class="tt-backlog">All Stories in Backlog</h2>
+	<ul class="tt-story-list-all">{% for story in stories %}
+		<li>
+				<pre>
+{{ story|storyparser_format }}
+				</pre>
+		</li>{% endfor %}
+	</ul>
+	</div>{% endblock main %}

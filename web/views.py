@@ -439,6 +439,16 @@ def backlog(request, id = None, delete_selected=False, sprint=False):
 	return render_to_response('pages/backlog.html', ctx, RequestContext(request))
 
 
+def backlog_all_stories(request):
+	open_stories = list(models.Story.objects.filter(state='BACKLOG'))
+	open_stories.sort(story_comparator)
+	ctx = {
+		'stories': open_stories
+	}
+
+	return render_to_response('pages/backlog_all_stories.html', ctx, RequestContext(request))
+
+
 @login_required
 def backlog_tasks(request, story_id):
 	last_post = utils.get_session_data(request) or {}
@@ -520,6 +530,25 @@ def sprint(request):
 	}
 
 	return render_to_response('pages/sprint.html', ctx, RequestContext(request))
+
+
+
+def sprint_all_stories(request, id=None):
+	if not id:
+		selected_sprint = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())[0]
+		if not selected_sprint:
+			raise Http404
+	else:
+		try:
+			selected_sprint = models.Sprint.objects.get(id=id)
+		except models.Sprint.DoesNotExist:
+			raise Http404
+
+	ctx = {
+		'sprint': selected_sprint
+	}
+
+	return render_to_response('pages/sprint_list_stories.html', ctx, RequestContext(request))
 
 
 @login_required

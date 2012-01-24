@@ -35,6 +35,7 @@ urlpatterns = patterns('web.views',
 
     # Backlog
 	url(r'^backlog/$', 'backlog', name='web.backlog'),
+	url(r'^backlog/all-stories/$', 'backlog_all_stories', name='web.backlog_all_stories'),
 	url(r'^backlog/story/edit/(?P<id>\d+)/$', 'backlog', name='web.backlog_story_edit'),
 	url(r'^backlog/story/edit/(?P<id>\d+)/story_parser/$', 'backlog', name='web.backlog_story_storyparser_edit'),
 	url(r'^backlog/story/edit/(?P<id>\d+)/story_parser/planning/$', 'backlog', {'sprint': True}, name='web.backlog_story_storyparser_edit_planning'),
@@ -51,6 +52,8 @@ urlpatterns = patterns('web.views',
 
 	# Sprint
 	url(r'^sprint/$', 'sprint', name='web.sprint'),
+	url(r'^sprint/all-stories/$', 'sprint_all_stories', name='web.sprint_all_stories'),
+	url(r'^sprint/(?P<id>\d+)/all-stories/$', 'sprint_all_stories', name='web.sprint_all_stories_sprint'),
 	url(r'^sprint/day/(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)/$', 'sprint_day', name='web.sprint_day'),
 	url(r'^sprint/(?P<id>\d+)/overview/$', 'sprint_overview', name='web.sprint_overview'),
 	url(r'^sprint/(?P<id>\d+)/overview/(?P<day>\d+)/(?P<month>\d+)/(?P<year>\d+)/$', 'sprint_overview', name='web.sprint_overview_day'),
