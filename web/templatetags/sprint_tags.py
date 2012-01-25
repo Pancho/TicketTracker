@@ -10,7 +10,8 @@ def calculate_score(sprint):
 	to_return = 0
 	for story in sprint.story_set.all():
 		for ticket in story.task_set.filter():
-			to_return += ticket.score
+			if ticket.score:
+				to_return += ticket.score
 	return to_return
 
 @register.filter(name='calculate_available_sprint_score')

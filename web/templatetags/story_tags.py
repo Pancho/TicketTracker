@@ -10,7 +10,7 @@ register = template.Library()
 def calculate_score(story):
 	to_return = 0
 	for task in story.task_set.all():
-		if task:
+		if task and task.score:
 			to_return += task.score
 	return to_return
 
@@ -27,7 +27,8 @@ def calculate_score_humanize(story):
 	for task in story.task_set.all():
 		if task.owner is not None:
 			planned += 1
-		to_return += task.score
+		if task.score:
+			to_return += task.score
 	if not planned:
 		return '%d, not planned' % to_return
 	elif planned < task_count:
