@@ -1,14 +1,22 @@
 from django import template
 
+
+from storyparser.converter import Converter
+
+
 register = template.Library()
 
 @register.filter(name='calculate_score')
 def calculate_score(story):
 	to_return = 0
 	for task in story.task_set.all():
-		if task.score:
+		if task and task.score:
 			to_return += task.score
 	return to_return
+
+@register.filter(name='storyparser_format')
+def storyparser_format(story):
+	return Converter.django_story_to_text(story, story.task_set.all())
 
 
 @register.filter(name='calculate_score_humanize')
