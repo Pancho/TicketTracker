@@ -72,7 +72,7 @@ class StoryParserForm(utils.TTForm):
 	def setup(self, request, last_post=None, initial=None):
 		if initial:
 			self.fields['id'].initial = initial.id
-			self.fields['story'].initial = Converter.django_story_to_text(initial, initial.task_set.all())
+			self.fields['story'].initial = Converter.django_story_to_text(initial, initial.task_set.all().order_by('id'))
 
 	def process(self, request):
 		story, tasks = Converter.text_to_django_story(self.cleaned_data['story'].replace(r'\r\n', r'\n'))
