@@ -10,7 +10,7 @@
 						<li><a href="{% url web.sprint_overview sprint.id %}">See Sprint Overview</a></li>{% endif %}{% if sprint|is_in_progress %}
 						<li><a href="{% url web.board %}">See Sprint Board</a></li>
 						<li><a href="{% url web.burndown_chart %}">See Sprint Burndown Chart</a></li>
-						<li><a href="{% url web.sprint %}">See Sprint Progress</a></li>{% endif %}{% if sprint|is_in_future %}
+						<li><a href="{% url web.sprint %}">See Sprint Progress</a></li>{% endif %}{% if sprint|is_in_future or user.is_superuser %}
 						<li><a href="{% url web.planning_sprint_availability sprint.id %}">Plan Availability</a></li>
 						<li><a href="{% url web.planning_sprint_stories sprint.id %}">Add stories</a></li>{% endif %}
 					</ol>

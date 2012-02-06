@@ -18,6 +18,12 @@ def calculate_score(story):
 def storyparser_format(story):
 	return Converter.django_story_to_text(story, story.task_set.all())
 
+@register.filter(name='filter_my_stories')
+def filter_my_stories(stories, user):
+	if user:
+		return stories.filter(task__owner=user).distinct()
+	else:
+		return stories
 
 @register.filter(name='calculate_score_humanize')
 def calculate_score_humanize(story):

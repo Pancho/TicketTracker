@@ -56,10 +56,15 @@ def index(request):
 	return render_to_response('pages/index.html', {}, RequestContext(request))
 
 
+# Test
+def test(request):
+	return render_to_response('pages/test.html', {}, RequestContext(request))
+
+
 # Board
 @login_required
-def board(request):
-	current_sprint_queryset = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())
+def board(request, mine_only=False):
+	current_sprint_queryset = models.Sprint.objects.all().order_by('-date_ends')
 	if current_sprint_queryset.count():
 		current_sprint = current_sprint_queryset[0]
 		board = current_sprint.board_set.all()[0]
@@ -76,7 +81,10 @@ def board(request):
 		'board': board,
 		'board_columns': board_columns,
 		'first_column_tag': first_column_tag,
+		'only_user': request.user if mine_only else None,
 	}
+
+	print current_sprint
 
 	return render_to_response('pages/board.html', ctx, RequestContext(request))
 
@@ -213,7 +221,7 @@ def board_story_move(request, id, to_column):
 #My Stuff
 @login_required
 def my_stuff(request):
-	current_sprint_queryset = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())
+	current_sprint_queryset = models.Sprint.objects.all().order_by('-date_ends')
 	if current_sprint_queryset.count():
 		current_sprint = current_sprint_queryset[0]
 		open_stories = list(models.Story.objects.filter(sprint=current_sprint).filter(task__owner=request.user).distinct())
@@ -278,7 +286,7 @@ def my_stuff_story_task_change_state(request, id, state):
 def my_stuff_story_fire(request, id=None):
 	last_post = utils.get_session_data(request) or {}
 
-	current_sprint_queryset = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())
+	current_sprint_queryset = models.Sprint.objects.all().order_by('-date_ends')
 	if current_sprint_queryset.count():
 		current_sprint = current_sprint_queryset[0]
 		open_stories = list(models.Story.objects.filter(sprint=current_sprint).filter(task__owner=request.user).distinct())
@@ -320,7 +328,7 @@ def my_stuff_story_fire(request, id=None):
 #Burndown Chart
 @login_required
 def burndown_chart(request):
-	current_sprint_queryset = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())
+	current_sprint_queryset = models.Sprint.objects.all().order_by('-date_ends')
 	if current_sprint_queryset.count():
 		current_sprint = current_sprint_queryset[0]
 		open_stories = list(models.Story.objects.filter(sprint=current_sprint).filter(task__owner=request.user).distinct())
@@ -338,7 +346,7 @@ def burndown_chart(request):
 
 
 def burndown_chart_full_screen(request):
-	current_sprint_queryset = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())
+	current_sprint_queryset = models.Sprint.objects.all().order_by('-date_ends')
 	if current_sprint_queryset.count():
 		current_sprint = current_sprint_queryset[0]
 	else:
@@ -353,7 +361,7 @@ def burndown_chart_full_screen(request):
 
 def burndown_chart_data(request, id=None):
 	if not id:
-		selected_sprint = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())[0]
+		selected_sprint = models.Sprint.objects.all().order_by('-date_ends')[0]
 		if not selected_sprint:
 			raise Http404
 	else:
@@ -505,7 +513,7 @@ def backlog_duplicate_story(request, story_id):
 def sprint(request):
 	days = []
 	
-	current_sprint_queryset = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())
+	current_sprint_queryset = models.Sprint.objects.all().order_by('-date_ends')
 	if current_sprint_queryset.count():
 		current_sprint = current_sprint_queryset[0]
 
@@ -535,7 +543,7 @@ def sprint(request):
 
 def sprint_all_stories(request, id=None):
 	if not id:
-		selected_sprint = models.Sprint.objects.filter(date_begins__lt=datetime.now()).filter(date_ends__gt=datetime.now())[0]
+		selected_sprint = models.Sprint.objects.all().order_by('-date_ends')[0]
 		if not selected_sprint:
 			raise Http404
 	else:
