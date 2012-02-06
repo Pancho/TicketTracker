@@ -84,8 +84,6 @@ def board(request, mine_only=False):
 		'only_user': request.user if mine_only else None,
 	}
 
-	print current_sprint
-
 	return render_to_response('pages/board.html', ctx, RequestContext(request))
 
 
