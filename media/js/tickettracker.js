@@ -163,7 +163,7 @@ TicketTracker = (function () {
 					this.initBoardDND();
 				}
 				// Disable text selection for story titles
-				$('h6 a').disableTextSelect();
+				//$('h6 a').disableTextSelect();
 			}
 		}
 	},
