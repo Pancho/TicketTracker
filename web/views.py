@@ -75,13 +75,17 @@ def board(request, mine_only=False):
 		board = None
 		first_column_tag = None
 		board_columns = None
+
+	if mine_only:
+		for column in board_columns:
+			column.set_active_user(request.user)
 	ctx = {
 		'sidebar_selected': 'board',
 		'current_sprint': current_sprint,
 		'board': board,
 		'board_columns': board_columns,
 		'first_column_tag': first_column_tag,
-		'only_user': request.user if mine_only else None,
+		'mine_only': mine_only,
 	}
 
 	return render_to_response('pages/board.html', ctx, RequestContext(request))

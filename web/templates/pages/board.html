@@ -1,5 +1,5 @@
 {% extends 'skeleton.html' %}{% block title %}TicketTracker - Board{% endblock title %}
 {% block main %}<div id="tt-board">
-				<h2 class="tt-board">Board{% if not current_sprint %} - No Active Sprint{% else %} for Sprint {{ current_sprint.sprint_number }}, named: {{ current_sprint.name }}{% endif %}</h2>{% if current_sprint %}
+				<h2 class="tt-board">Board{% if not current_sprint %} - No Active Sprint{% else %} for Sprint {{ current_sprint.sprint_number }}, named: {{ current_sprint.name }}{% endif %}{% if mine_only %} - <a href="{% url web.board %}">Show All Stories</a>{% else %} - <a href="{% url web.board_mine_only %}">My Stories Only</a>{% endif %}</h2>{% if current_sprint %}
 				{% include 'blocks/board_columns.html' %}{% endif %}
 			</div>{% endblock main %}

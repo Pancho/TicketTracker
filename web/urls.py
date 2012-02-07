@@ -15,7 +15,7 @@ urlpatterns = patterns('web.views',
 
     # Board
     url(r'^board/$', 'board', name='web.board'),
-    url(r'^board/my-stories/$', 'board', {'mine_only': True}, name='web.board'),
+    url(r'^board/my-stories/$', 'board', {'mine_only': True}, name='web.board_mine_only'),
     url(r'^board/story/(?P<id>\d+)/next$', 'board_story_next', name='web.board_story_next'),
     url(r'^board/story/(?P<id>\d+)/previous$', 'board_story_previous', name='web.board_story_previous'),
     url(r'^board/story/move/(?P<id>\d+)/(?P<to_column>[-\w]+)/$', 'board_story_move', name='web.board_story_move'),

@@ -121,13 +121,22 @@ class BoardColumn(models.Model):
 	board = models.ForeignKey(to=Board)
 	order = models.IntegerField()
 
+	active_user = None
+
 
 	def __unicode__(self):
 		return u'Borad column %s (%s), order: %d' % (self.title, self.tag, self.order)
 
 
+	def set_active_user(self, user):
+		self.active_user = user
+
+
 	def get_stories(self):
-		return self.board.sprint.story_set.filter(state=self.tag)
+		if self.active_user:
+			return self.board.sprint.story_set.filter(state=self.tag).filter(task__owner=self.active_user).distinct()
+		else:
+			return self.board.sprint.story_set.filter(state=self.tag)
 
 
 class BoardAction(models.Model):
