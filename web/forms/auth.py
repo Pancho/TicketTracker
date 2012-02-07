@@ -66,7 +66,7 @@ class PasswordResetForm(authforms.PasswordResetForm):
 		html_body = loader.get_template('email/email_password_reset.html').render(ctx)
 		try:
 			bcc = []
-			if settings.EMAIL_LOG:
+			if hasattr(settings, 'EMAIL_LOG'):
 				bcc.append(settings.EMAIL_LOG)
 			email = EmailMultiAlternatives('Password reset for TicketTracker', text_body, settings.SERVER_EMAIL, [user.email], bcc)
 			email.attach_alternative(html_body, 'text/html')
