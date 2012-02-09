@@ -82,9 +82,13 @@ class StoryParserForm(utils.TTForm):
 			story.sprint = existing_story.sprint
 			story.created_by = request.user
 		else:
+			existing_story = None
 			story.state = 'BACKLOG'
 			story.created_by = request.user
 		story.save()
+		# Delete old story
+		if existing_story:
+			existing_story.delete()
 
 		for task in story.task_set.all():
 			task.delete()
