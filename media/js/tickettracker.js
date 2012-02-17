@@ -156,12 +156,12 @@ TicketTracker = (function () {
 				});
 			},
 			initialize: function () {
-				if (navigator.userAgent.match(/iPad/i) == null) {
-					$('.tt-side-list:not(.tt-non-collapsible, ol li)').find('ol, p, span').css('display', 'none');
+//				if (navigator.userAgent.match(/iPad/i) == null) {
+//					$('.tt-side-list:not(.tt-non-collapsible, ol li)').find('ol, p, span').css('display', 'none');
 					$('.tt-side-list:not(.tt-non-collapsible, ol li)').undelegate().delegate('h6 a', 'click', this.toggleStoryElements);
 					this.initPlanningDND();
 					this.initBoardDND();
-				}
+//				}
 				// Disable text selection for story titles
 				//$('h6 a').disableTextSelect();
 			}
