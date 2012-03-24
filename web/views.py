@@ -400,11 +400,16 @@ def burndown_chart_data(request, id=None):
 							total_score -= story_score
 						if action.board_from == 'DONE':
 							total_score += story_score
-			for action in models.StoryAction.objects.filter(date__gt=single_date).filter(date__lt=single_date + timedelta(days=1)):
+							
+			for action in models.StoryAction.objects.filter(date__gt=single_date).filter(date__lt=single_date + timedelta(days=1)).order_by('-date'):
 				if action.task.story.sprint == selected_sprint and (action.task.story.is_burning == False or action.task.story.is_burning == None):
-					if action.action == 'TO_CLOSED':
+					try:
+						previous_task_action = models.StoryAction.objects.filter(task=action.task).filter(date__lt=action.date).order_by('-date')[0].action
+					except Exception,e:
+						previous_task_action = 'TO_WAITING'
+					if action.action == 'TO_CLOSED' and previous_task_action != action.action:
 						task_total_score -= action.task.score
-					if action.action == 'TO_WAITING' or action.action == 'TO_WORKING':
+					if (action.action == 'TO_WAITING' or action.action == 'TO_WORKING') and previous_task_action == 'TO_CLOSED':
 						task_total_score += action.task.score
 			data.append([strftime("%m.%d.%Y", single_date.timetuple()), total_score, task_total_score, fire_score])
 		else:
